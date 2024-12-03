@@ -2,10 +2,13 @@ import React from 'react'
 import './Auth.css'
 import { Link } from 'react-router-dom'
 import { IoEye } from 'react-icons/io5'
+import Navbar from '../Components/Navbar'
 const Signup = () => {
 
 
   return (
+    <>
+    <Navbar />
     <div className='AuthMain'>
       <div className='AuthBox'>
 
@@ -39,6 +42,7 @@ const Signup = () => {
       </div>
 
     </div>
+    </>
   )
 }
 
