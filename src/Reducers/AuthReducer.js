@@ -13,15 +13,22 @@ export const authFunc = (state = initialState, action) => {
                 ...state,
                 user: action.payload,
             };
-            case 'USERCHECK' :
-                console.log('checkUserworking')
-                
-                    return {
-                        ...state,
-                        isUser: action.payload,
-                    };
-               
-                
+
+        case 'SIGNIN':
+            console.log('loggingin')
+            return {
+                ...state,
+                user: action.payload
+            }
+        case 'USERCHECK':
+            console.log('checkUserworking')
+
+            return {
+                ...state,
+                isUser: action.payload,
+            };
+
+
 
 
         default: return state.user
