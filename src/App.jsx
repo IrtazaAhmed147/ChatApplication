@@ -1,20 +1,22 @@
 
 import './App.css';
-import sideDesignPic from './Assets/sideDesignsPic.png'
-import Navbar from './Components/Navbar';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import Home from './Pages/Home';
+import Login from './Pages/Login';
+import Signup from './Pages/Signup';
+
 function App() {
   return (
     <>
-      <div className=' sideDesign'>
-        <img className='upperimage' src={sideDesignPic} alt="" />
-        <img className='bottomimage' src={sideDesignPic} alt="" />
-      </div>
-
-      <div className='main'>
-        <div className='box'>
-          <Navbar/>
-        </div>
-      </div>
+    <Router>
+    <Routes>
+    <Route path='/' element={<Home />} />
+    <Route path='/login' element={<Login />} />
+    <Route path='/signup' element={<Signup />} />
+    
+    </Routes>
+    </Router>
     </>
   );
 }

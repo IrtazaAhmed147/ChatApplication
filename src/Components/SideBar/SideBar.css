@@ -1,0 +1,51 @@
+.searchBox{
+    display: flex;
+    align-items: center;
+    padding: 5px 5px;
+    border-radius: 19px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    gap: 10px;
+    width: 95%;
+}
+.searchBox input{
+    border: none;
+    font-size: 18px;
+    outline: none;
+    height: 22px;
+    width: 100%;
+}
+.userBox{
+    width: 95%;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.username{
+    font-size: 10px;
+    color: grey;
+
+}
+
+/* scroll bar */
+
+
+.scrollable-container::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+  }
+  
+  .scrollable-container::-webkit-scrollbar-track {
+    background: #efe5e5; /* Track background */
+    border-radius: 5px;
+  }
+  
+  .scrollable-container::-webkit-scrollbar-thumb {
+    background-color: grey; /* Scrollbar color */
+    border-radius: 5px;
+    border: 2px solid grey; /* Padding around the scrollbar thumb */
+  }
+  
+  .scrollable-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Scrollbar color on hover */
+  }
