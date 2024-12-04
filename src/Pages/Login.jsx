@@ -35,14 +35,16 @@ const Login = () => {
     try {
 
       const signInUsers = await loginUser(email, password)
-      setIsError(signInUsers)
       console.log(signInUsers)
       if (signInUsers) {
-
+        
         dispatch(signInUser(signInUsers))
+        setIsError(false)
+      } else {
+        setIsError('Invalid email or password.');
       }
     } catch (error) {
-      console.log(error.message)
+      setIsError(error.message); 
     }
 
   }

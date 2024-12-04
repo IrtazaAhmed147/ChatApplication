@@ -17,11 +17,12 @@ const Signup = () => {
   const [isUserNameError, setIsUserNameError] = useState(false)
   const [isAuthError, setIsAuthError] = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [isTaken, setIsTaken] = useState(false)
   const [users, setUsers] = useState([])
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.authFunc);
-  // console.log(data)
 
   useEffect(() => {
     checkUser(dispatch);
@@ -34,15 +35,19 @@ const Signup = () => {
   }, [data, navigate])
 
   // useEffect( () => {
-    
+
   // },[users]) 
 
 
   const handleSubmit = async (e) => {
 
     e.preventDefault()
+
+    if (isTaken) {
+      return
+    }
+
     if (!userName.trim()) {
-      console.log('adsf')
       setIsUserNameError(true)
       setIsError(false)
       return;
@@ -56,7 +61,6 @@ const Signup = () => {
 
     try {
 
-      console.log('uipo')
 
       const signUpUser = await createUser(email, password, userName)
       setIsAuthError(signUpUser)
@@ -73,17 +77,24 @@ const Signup = () => {
 
   }
 
-  const handleUserNameFunc = (e)=>{
-    setUserName(e.target.value)
+  const handleUserNameFunc = (e) => {
+    const currentUserName = e.target.value; // Get the current input value
+    setUserName(currentUserName);
     const fetchUsers = async () => {
       const fetchedUsers = await getUserName();
-      
-      const validUsers = fetchedUsers.filter((user)=>{
-        return user.userName === userName
-      })
-      console.log(fetchedUsers)
-      console.log(validUsers)
-    }
+
+      const validUsers = fetchedUsers.filter((user) => {
+        return user.userName === currentUserName; // Use the current input value
+      });
+
+
+      if (validUsers.length > 0) {
+        setIsTaken(true); // Username is taken
+      } else {
+        setIsTaken(false); // Username is available
+      }
+
+    };
     fetchUsers()
   }
 
@@ -100,6 +111,10 @@ const Signup = () => {
 
               <input onChange={handleUserNameFunc} className='input' type="text" placeholder='Username' required />
               {isUserNameError && <p>Username is required</p>}
+              {isTaken && <p>Username is already taken</p>}
+              {/* {isUserNameError && <p color='green'>Username is available</p>} */}
+
+
             </div>
             <div>
 
