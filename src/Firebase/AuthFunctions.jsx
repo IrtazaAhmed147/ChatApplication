@@ -22,8 +22,8 @@ export const createUser = async (email, password, userName) => {
     }
 
   } catch (error) {
-    const errorCode = error.code;
-    return errorCode;
+
+    throw new Error(error.message);
     // console.error(`Error Code: ${errorCode}, Message: ${errorMessage}`);
   }
 };
@@ -56,7 +56,7 @@ export const loginUser = async (email, password) => {
     return user
 
   } catch (error) {
-    return error.message
+    throw new Error(error.message);
   }
 
 }

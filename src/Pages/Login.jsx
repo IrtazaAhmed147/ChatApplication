@@ -6,6 +6,8 @@ import Navbar from '../Components/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkUser, loginUser } from '../Firebase/AuthFunctions'
 import { signInUser } from '../Actions/AuthAction'
+import Loader from '../Components/Loader'
+// import Loader from '../Components/Loader'
 
 const Login = () => {
 
@@ -13,6 +15,8 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const dispatch = useDispatch()
   const data = useSelector((state) => state.authFunc);
@@ -26,32 +30,48 @@ const Login = () => {
   useEffect(() => {
     if (data && data.isUser) {
       navigate('/')
-      console.log(data)
+      
     }
   }, [data, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsLoading(true);
+    setIsError(false);
+    setError("");
     try {
 
       const signInUsers = await loginUser(email, password)
-      console.log(signInUsers)
-      if (signInUsers) {
-        
+   
+      if (signInUsers && signInUsers.user) {
+
         dispatch(signInUser(signInUsers))
-        setIsError(false)
-      } else {
-        setIsError('Invalid email or password.');
+       
+
       }
     } catch (error) {
-      setIsError(error.message); 
+      console.error("Login error:", error.message);
+      setIsError(true);
+      setError(error.message);
     }
+    finally {
+      setIsLoading(false)
+
+    }
+    // setIsLoading(false)
 
   }
 
 
+
+
   return (
     <>
+
+      {isLoading && <div className='backgroundLoader'>
+        <Loader />
+      </div>}
+
       <Navbar />
       <div className='AuthMain'>
         <div className='AuthBox'>
@@ -68,10 +88,10 @@ const Login = () => {
             <div>
               <div className='passIcon'>
                 <input className='passInput' onChange={(e) => setPassword(e.target.value)} type={showPass ? 'text' : 'password'} placeholder='Password' required />
-                { showPass &&<IoEye onClick={()=> setShowPass(false)} size={30} color='black' />}
-                {!showPass && <IoEyeOff onClick={()=> setShowPass(true)} size={30} color='black'/>}
+                {showPass && <IoEye onClick={() => setShowPass(false)} size={30} color='black' />}
+                {!showPass && <IoEyeOff onClick={() => setShowPass(true)} size={30} color='black' />}
               </div>
-              {isError && <p>{isError}</p>}
+              {isError && <p>{error}</p>}
             </div>
 
             <button className='submitBtn' type='submit'>Login</button>

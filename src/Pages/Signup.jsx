@@ -7,6 +7,7 @@ import { checkUser, createUser } from '../Firebase/AuthFunctions'
 import { useDispatch, useSelector } from 'react-redux'
 import { demoUser, signUpAction } from '../Actions/AuthAction'
 import { demoFunc, getUserName } from '../Firebase/FirestoreFunctions'
+import Loader from '../Components/Loader'
 const Signup = () => {
 
   const [userName, setUserName] = useState('')
@@ -18,8 +19,10 @@ const Signup = () => {
   const [isAuthError, setIsAuthError] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [isTaken, setIsTaken] = useState(false)
-  const [users, setUsers] = useState([])
-
+  
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.authFunc);
@@ -42,7 +45,10 @@ const Signup = () => {
   const handleSubmit = async (e) => {
 
     e.preventDefault()
-
+    setIsLoading(true);
+    setIsAuthError(false)
+    setIsError(false)
+    setError("");
     if (isTaken) {
       return
     }
@@ -63,15 +69,19 @@ const Signup = () => {
 
 
       const signUpUser = await createUser(email, password, userName)
-      setIsAuthError(signUpUser)
       if (signUpUser && signUpUser.uid) {
 
         await demoFunc(email, userName, name, signUpUser.uid)
       }
       dispatch(signUpAction(signUpUser))
     } catch (error) {
-      console.log(error)
+      setIsAuthError(true)
+      setError(error.message)
       // setIsAuthError(error.message)
+    } finally {
+      
+      
+      setIsLoading(false)
     }
 
 
@@ -100,6 +110,9 @@ const Signup = () => {
 
   return (
     <>
+    {isLoading && <div className='backgroundLoader'>
+        <Loader />
+      </div>}
       <Navbar />
       <div className='AuthMain'>
         <div className='AuthBox'>
@@ -133,7 +146,7 @@ const Signup = () => {
                 {showPass && <IoEye onClick={() => setShowPass(false)} size={30} color='black' />}
                 {!showPass && <IoEyeOff onClick={() => setShowPass(true)} size={30} color='black' />}
               </div>
-              {isAuthError && <p>{isAuthError}</p>}
+              {isAuthError && <p>{error}</p>}
             </div>
 
             <button className='submitBtn' type='submit'>Create Account</button>

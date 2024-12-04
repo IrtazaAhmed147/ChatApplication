@@ -8,7 +8,6 @@ export const authFunc = (state = initialState, action) => {
 
     switch (action.type) {
         case 'SIGNUP':
-            console.log('working')
             console.log(action.payload.email)
             return {
                 ...state,
@@ -16,13 +15,11 @@ export const authFunc = (state = initialState, action) => {
             };
 
         case 'SIGNIN':
-            console.log('loggingin')
             return {
                 ...state,
                 user: action.payload
             }
         case 'USERCHECK':
-            console.log('checkUserworking')
 
             return {
                 ...state,
