@@ -17,12 +17,11 @@ const Home = () => {
   console.log(data)
 
   useEffect(() => {
-    // Check user authentication state and sync with Redux
     checkUser(dispatch);
   }, [dispatch]);
 
   useEffect(() => {
-    if (!data ) {
+    if (!data) {
       navigate('/login')
       console.log(data)
     }

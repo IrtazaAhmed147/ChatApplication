@@ -5,7 +5,7 @@ import { IoEye, IoEyeOff } from 'react-icons/io5'
 import Navbar from '../Components/Navbar'
 import { checkUser, createUser } from '../Firebase/AuthFunctions'
 import { useDispatch, useSelector } from 'react-redux'
-import { demoUser, signUpAction } from '../Actions/AuthAction'
+import { signUpAction } from '../Actions/AuthAction'
 import { demoFunc, getUserName } from '../Firebase/FirestoreFunctions'
 import Loader from '../Components/Loader'
 const Signup = () => {
@@ -19,10 +19,10 @@ const Signup = () => {
   const [isAuthError, setIsAuthError] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [isTaken, setIsTaken] = useState(false)
-  
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.authFunc);
@@ -37,9 +37,7 @@ const Signup = () => {
     }
   }, [data, navigate])
 
-  // useEffect( () => {
 
-  // },[users]) 
 
 
   const handleSubmit = async (e) => {
@@ -77,10 +75,9 @@ const Signup = () => {
     } catch (error) {
       setIsAuthError(true)
       setError(error.message)
-      // setIsAuthError(error.message)
     } finally {
-      
-      
+
+
       setIsLoading(false)
     }
 
@@ -88,20 +85,20 @@ const Signup = () => {
   }
 
   const handleUserNameFunc = (e) => {
-    const currentUserName = e.target.value; // Get the current input value
+    const currentUserName = e.target.value;
     setUserName(currentUserName);
     const fetchUsers = async () => {
       const fetchedUsers = await getUserName();
 
       const validUsers = fetchedUsers.filter((user) => {
-        return user.userName === currentUserName; // Use the current input value
+        return user.userName === currentUserName;
       });
 
 
       if (validUsers.length > 0) {
-        setIsTaken(true); // Username is taken
+        setIsTaken(true);
       } else {
-        setIsTaken(false); // Username is available
+        setIsTaken(false);
       }
 
     };
@@ -110,7 +107,7 @@ const Signup = () => {
 
   return (
     <>
-    {isLoading && <div className='backgroundLoader'>
+      {isLoading && <div className='backgroundLoader'>
         <Loader />
       </div>}
       <Navbar />
@@ -125,7 +122,6 @@ const Signup = () => {
               <input onChange={handleUserNameFunc} className='input' type="text" placeholder='Username' required />
               {isUserNameError && <p>Username is required</p>}
               {isTaken && <p>Username is already taken</p>}
-              {/* {isUserNameError && <p color='green'>Username is available</p>} */}
 
 
             </div>
@@ -138,7 +134,7 @@ const Signup = () => {
             <div>
 
               <input onChange={(e) => setEmail(e.target.value)} className='input' type="email" placeholder='Email Address' required />
-              {/* <p>Email is required</p> */}
+
             </div>
             <div>
               <div className='passIcon'>

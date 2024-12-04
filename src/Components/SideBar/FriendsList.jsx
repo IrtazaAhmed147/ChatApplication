@@ -17,7 +17,9 @@ const FriendsList = () => {
                 gap: '10px',
                 overflow: 'scroll',
                 overflowX: 'hidden',
-                paddingBottom: '5px'
+                paddingBottom: '5px',
+                minHeight: '490px',
+
             }}>
 
                 <div>

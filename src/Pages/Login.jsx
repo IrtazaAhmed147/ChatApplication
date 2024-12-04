@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import Navbar from '../Components/Navbar'
+import './Auth.css'
 import { IoEye, IoEyeOff } from 'react-icons/io5'
 import { Link, useNavigate } from 'react-router-dom'
-import './Auth.css'
-import Navbar from '../Components/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkUser, loginUser } from '../Firebase/AuthFunctions'
 import { signInUser } from '../Actions/AuthAction'
 import Loader from '../Components/Loader'
-// import Loader from '../Components/Loader'
 
 const Login = () => {
 
@@ -23,14 +22,13 @@ const Login = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Check user authentication state and sync with Redux
     checkUser(dispatch);
   }, [dispatch]);
 
   useEffect(() => {
     if (data && data.isUser) {
       navigate('/')
-      
+
     }
   }, [data, navigate])
 
@@ -42,11 +40,11 @@ const Login = () => {
     try {
 
       const signInUsers = await loginUser(email, password)
-   
+
       if (signInUsers && signInUsers.user) {
 
         dispatch(signInUser(signInUsers))
-       
+
 
       }
     } catch (error) {
@@ -58,7 +56,6 @@ const Login = () => {
       setIsLoading(false)
 
     }
-    // setIsLoading(false)
 
   }
 
@@ -83,7 +80,7 @@ const Login = () => {
             <div>
 
               <input className='input' onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Email Address' required />
-              {/* <p>Email is required</p> */}
+
             </div>
             <div>
               <div className='passIcon'>

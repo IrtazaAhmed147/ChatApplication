@@ -7,14 +7,13 @@ const ChatlistPage = () => {
 
   const navigate = useNavigate()
 
-  const handleLogOut = async ()=> {
+  const handleLogOut = async () => {
     console.log('logout process')
     try {
-      
-       await signOutUser()
-        navigate('/login')
-      
-      // dispatch(signInUser(signInUsers))
+
+      await signOutUser()
+      navigate('/login')
+
     } catch (error) {
       console.log(error.message)
     }
@@ -28,10 +27,10 @@ const ChatlistPage = () => {
         justifyContent: 'space-between',
       }}>
 
-       <h1 style={{margin: '0px'}}>Chats</h1>
-       <button onClick={()=> handleLogOut()} className='logOutBtn'>LogOut</button>
+        <h1 style={{ margin: '0px' }}>Chats</h1>
+        <button onClick={() => handleLogOut()} className='logOutBtn'>LogOut</button>
       </div>
-       <FriendsList />
+      <FriendsList />
     </div>
   )
 }
