@@ -1,6 +1,7 @@
 const initialState = {
     user: null,
-    isUser: false
+    isUser: false,
+    userDetails: null
 }
 
 export const authFunc = (state = initialState, action) => {
@@ -26,6 +27,14 @@ export const authFunc = (state = initialState, action) => {
             return {
                 ...state,
                 isUser: action.payload,
+            };
+        case 'DEMOUSER':
+            console.log('checkUserdemoworking')
+            console.log(action.payload)
+
+            return {
+                ...state,
+                userDetails: action.payload,
             };
 
 

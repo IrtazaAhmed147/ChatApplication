@@ -17,3 +17,10 @@ export const setUserAction = (value)=> {
     }
 }
 
+export const demoUser = (value)=> {
+    return {
+        type: 'DEMOUSER',
+        payload: value
+    }
+}
+

@@ -23,8 +23,8 @@ export const createUser = async (email, password, userName) => {
 
   } catch (error) {
     const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error(`Error Code: ${errorCode}, Message: ${errorMessage}`);
+    return errorCode;
+    // console.error(`Error Code: ${errorCode}, Message: ${errorMessage}`);
   }
 };
 
@@ -56,7 +56,7 @@ export const loginUser = async (email, password) => {
     return user
 
   } catch (error) {
-    console.log(error)
+    return error.message
   }
 
 }
