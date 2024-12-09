@@ -42,3 +42,56 @@ export const getUserName = async () => {
 
 
 }
+
+
+// export const checkUser = async (userName) => {
+//   const collectionRef = collection(fireStore, "Users")
+//   const q = query(collectionRef, where('userName', '==', userName))
+//   const res = await getDocs(q)
+  
+//   return res
+// }
+
+export const sendRequest = async (SenderId, RecieverId) => {
+  console.log("SenderId:", SenderId, "RecieverId:", RecieverId);
+  try {
+    const docRef = await addDoc(collection(db, "FriendRequests"), {
+      SenderId,
+      RecieverId,
+      status: 'Pending',
+      time: Date.now(),
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e
+  }
+}
+
+
+
+export const getFriendRequests = async () => {
+  try {
+
+    const querySnapshot = await getDocs(collection(db, "FriendRequests"));
+
+    // Create an array to store users
+    const invitations = [];
+
+    // Loop through the documents and add them to the array
+    querySnapshot.forEach((doc) => {
+      invitations.push({
+        id: doc.id,
+        ...doc.data(),  // spread the document data
+      });
+    });
+
+    // Return the users array
+    return invitations;
+  } catch (error) {
+    console.log(error.message)
+    throw error
+  }
+
+
+}

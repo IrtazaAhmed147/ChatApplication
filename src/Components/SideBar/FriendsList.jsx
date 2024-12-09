@@ -24,9 +24,7 @@ const FriendsList = () => {
 
                 <div>
                     <ul style={{ listStyle: 'none' }}>
-                        <List />
-                        <List />
-                        <List />
+                       
                       
                     </ul>
                 </div>
