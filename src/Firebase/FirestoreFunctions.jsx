@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, serverTimestamp, where, query } from "firebase/firestore";
 import { db } from "./Firebase";
 
 
@@ -59,7 +59,7 @@ export const sendRequest = async (SenderId, RecieverId) => {
       SenderId,
       RecieverId,
       status: 'Pending',
-      time: Date.now(),
+      time: serverTimestamp(),
     });
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
@@ -94,4 +94,18 @@ export const getFriendRequests = async () => {
   }
 
 
+}
+
+export const FindReceiver = async (recieverId) => {
+  console.log(recieverId)
+  try{
+
+    const collectionRef = collection(db, "FriendRequests")
+    const q = query(collectionRef, where('RecieverId', '==', recieverId))
+    const res = await getDocs(q)
+    console.log(res)
+    return res
+  } catch (error) {
+    throw error
+  }
 }

@@ -17,7 +17,8 @@ const Home = () => {
   console.log(data)
 
   useEffect(() => {
-    checkUser(dispatch);
+    checkUser(dispatch);  
+
   }, [dispatch]);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const Home = () => {
       navigate('/login')
       console.log(data)
     }
+    console.log(data)
   }, [data, navigate])
 
   return (

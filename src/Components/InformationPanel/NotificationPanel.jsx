@@ -1,22 +1,39 @@
 import React, { useEffect, useState } from 'react'
-import { getFriendRequests } from '../../Firebase/FirestoreFunctions'
+import { FindReceiver, getFriendRequests } from '../../Firebase/FirestoreFunctions'
+import { useSelector } from 'react-redux';
 
 const NotificationPanel = () => {
 
-  const [notifications, setNotifications] = useState([])
+  const data = useSelector((state) => state.authFunc);
+  console.log("User Data:", data);
 
+  const [notifications, setNotifications] = useState([]);
+  const [updatedList, setUpdatedList] = useState([]);
 
-  useEffect(()=> {
-    const checkNotifications = async ()=> {
-
-      const friendRequests = await getFriendRequests()
-      setNotifications(friendRequests)
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        // Fetch friend requests
+        const friendRequests = await getFriendRequests();
+        setNotifications(friendRequests);
         console.log(notifications)
-    }
-    // checkNotifications()
-  })
+        // Fetch receivers based on current user's displayName
+        if (data?.isUser?.displayName) {
+          const receiverSnapshot = await FindReceiver(data.isUser.displayName);
+          const users = receiverSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          setUpdatedList(users);
+          console.log(updatedList)
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
 
-
+    fetchNotifications();
+  }, [data?.isUser?.displayName]); // Dependency on `displayName`
 
   return (
     <div  className='InformationPanelBoxes'>
@@ -33,7 +50,9 @@ const NotificationPanel = () => {
 
         <div>
           <ul style={{ listStyle: 'none' }}>
-           <li> <h3>Jupiter</h3> <p>Jupiter has sent you a friend request</p> <button>Add</button> <button>Reject</button></li>
+           {updatedList.map((value)=> {
+            return <li key={value.id}> <h3>{value.SenderId}</h3> <p>has sent you a friend request</p> <button>Add</button> <button>Reject</button></li>
+           })} 
 
 
           </ul>

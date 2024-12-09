@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
 import './InformationPanel.css'
 import { getUserName, sendRequest } from '../../Firebase/FirestoreFunctions'
-import List from '../SideBar/List'
 import { useSelector } from 'react-redux'
 
 const AddPeoplePanel = () => {
@@ -35,10 +34,9 @@ const AddPeoplePanel = () => {
     fetchUsers()
   }
   const addFriendBtn = async ()=> {
-    console.log('adfafd')
     try {
 
-      console.log(data.isUser.displayName, users[0].userName)
+      // console.log(data.isUser.displayName, users[0].userName)
       await sendRequest(data.isUser.displayName, users[0].userName)
     } catch (error) {
       console.log(error)
