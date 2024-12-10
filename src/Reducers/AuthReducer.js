@@ -5,7 +5,7 @@ const initialState = {
 }
 
 export const authFunc = (state = initialState, action) => {
-
+    console.log(action.payload)
     switch (action.type) {
         case 'SIGNUP':
             console.log(action.payload.email)
@@ -37,7 +37,7 @@ export const authFunc = (state = initialState, action) => {
 
 
 
-        default: return state.user
+        default: return state
 
     }
 }

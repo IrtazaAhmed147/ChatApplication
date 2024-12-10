@@ -7,18 +7,19 @@ import FindPeoplePage from './FindPeoplePage'
 import { checkUser } from '../Firebase/AuthFunctions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { getUserName } from '../Firebase/FirestoreFunctions'
 const Home = () => {
 
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const data = useSelector((state) => state.authFunc);
+  const data = useSelector((state) => state.auth);
   console.log(data)
 
   useEffect(() => {
     checkUser(dispatch);  
-
+    getUserName(dispatch)
   }, [dispatch]);
 
   useEffect(() => {

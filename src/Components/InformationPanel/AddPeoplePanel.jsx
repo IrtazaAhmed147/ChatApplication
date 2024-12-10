@@ -2,25 +2,25 @@ import React, { useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
 import './InformationPanel.css'
 import { getUserName, sendRequest } from '../../Firebase/FirestoreFunctions'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const AddPeoplePanel = () => {
 
-  const [userName, setUserName] = useState('')
   const [users, setUsers] = useState([])
 
-  const data = useSelector((state) => state.authFunc);
+  const data = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
   const handleSearchFriend = (e) => {
     const currentUserName = e.target.value;
-    setUserName(currentUserName);
     const fetchUsers = async () => {
       try {
 
-        const fetchedUsers = await getUserName();
+        const fetchedUsers = data.userDetails;
+
         const avalaibleUsers = fetchedUsers.filter((user) => {
-          if ((user.userName === currentUserName) && (user.userName !== data.isUser.displayName)) {
-            return user
-          }
+          return    (user.userName === currentUserName) && (user.userName !== data.isUser.displayName)
+           
+          
         });
         setUsers(avalaibleUsers)
         

@@ -18,7 +18,7 @@ const Login = () => {
   const [error, setError] = useState('')
 
   const dispatch = useDispatch()
-  const data = useSelector((state) => state.authFunc);
+  const data = useSelector((state) => state.auth);
   const navigate = useNavigate()
 
   useEffect(() => {

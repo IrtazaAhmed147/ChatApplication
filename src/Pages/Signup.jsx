@@ -25,7 +25,7 @@ const Signup = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const data = useSelector((state) => state.authFunc);
+  const data = useSelector((state) => state.auth);
 
   useEffect(() => {
     checkUser(dispatch);

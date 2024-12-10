@@ -10,12 +10,7 @@ export const createUser = async (email, password, userName) => {
     await updateProfile(user, { displayName: userName });
 
 
-    console.log("User created successfully:", {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-     
-    }); // User signed up successfully
+    console.log("User created successfully:", user); // User signed up successfully
     return {
       uid: user.uid,
       email: user.email,
@@ -36,7 +31,7 @@ export const checkUser = (dispatch) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in
-      
+        
       dispatch(setUserAction({
         uid: user.uid,
         email: user.email,
