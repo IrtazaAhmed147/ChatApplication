@@ -15,12 +15,14 @@
     width: 100%;
 }
 .userBox{
+  cursor: pointer;
+  flex-direction: column;
     width: 95%;
     border-radius: 10px;
     background-color: #fff;
     padding: 10px;
     justify-content: space-between;
-    align-items: center;
+ 
 
     display: flex;
     margin-top: 10px;
@@ -29,7 +31,10 @@
 .username{
     font-size: 10px;
     color: grey;
-
+  
+}
+p{
+  margin: 0 !important;  
 }
 
 /* scroll bar */

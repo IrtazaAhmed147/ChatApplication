@@ -154,11 +154,13 @@ export const rejectRequest = async (id) => {
 }
 
 
-export const addFriend = async (userId, userName) => {
+export const addFriend = async (userId, user) => {
   try {
     const collectionRef = collection(db, 'Users', userId, 'Friends')
     const result = await addDoc(collectionRef, {
-      userName
+      userName: user.userName,
+      name: user.name,
+      userUid: user.userUid,
     })
     console.log(result)
   } catch (error) {
@@ -173,6 +175,7 @@ export const getFriendList = async (userId)=> {
   try {
     const collectionRef = collection(db, 'Users', userId, 'Friends')
     const result = await getDocs(collectionRef)
+
     return result
     
   } catch (error) {

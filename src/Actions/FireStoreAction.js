@@ -10,3 +10,10 @@ export const filterRequestList = (value)=> {
         payload: value
     }
 }
+
+export const isUserFriend = (value)=> {
+    return {
+        type: 'ISUSERFRIEND',
+        payload: value
+    }
+}

@@ -61,8 +61,8 @@ const NotificationPanel = () => {
 
         if(ownerId.length === 2) {
 
-          await addFriend(ownerId[1].id, ownerId[0].userName)
-          await addFriend(ownerId[0].id, ownerId[1].userName)
+          await addFriend(ownerId[1].id, ownerId[0])
+          await addFriend(ownerId[0].id, ownerId[1])
           
           await rejectRequest(id);
           // dispatch(filterRequestList(id))

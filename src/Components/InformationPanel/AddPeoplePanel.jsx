@@ -3,13 +3,18 @@ import { IoIosSearch } from 'react-icons/io'
 import './InformationPanel.css'
 import { getUserName, sendRequest } from '../../Firebase/FirestoreFunctions'
 import { useDispatch, useSelector } from 'react-redux'
+import { FaCheck } from 'react-icons/fa'
 
 const AddPeoplePanel = () => {
 
   const [users, setUsers] = useState([])
+  const [isFriend, setIsFriend] = useState(false)
 
   const data = useSelector((state) => state.auth);
-  const dispatch = useDispatch()
+  const fireStoreData = useSelector((state) => state.fireStore);
+  console.log(fireStoreData.friends)
+
+  
   const handleSearchFriend = (e) => {
     const currentUserName = e.target.value;
     const fetchUsers = async () => {
@@ -22,6 +27,19 @@ const AddPeoplePanel = () => {
            
           
         });
+        console.log(avalaibleUsers)
+        if(avalaibleUsers.length !== 0){
+          const isUserFriend = fireStoreData.friends?.filter((user) => {
+            return    user.userName === avalaibleUsers[0].userName
+             
+
+            })
+            setIsFriend(isUserFriend.length === 0 ? false : true)
+            console.log(isUserFriend)
+            console.log(isFriend)
+         
+        }
+
         setUsers(avalaibleUsers)
         
       } catch (error) {
@@ -77,7 +95,8 @@ const AddPeoplePanel = () => {
                   }}>{user.name}</p>
                   <p className='username'>{user.userName}</p>
                 </span>
-                <button onClick={addFriendBtn}>Add</button>
+                {!isFriend && <button onClick={addFriendBtn}>Add</button>}
+                {isFriend && <p><FaCheck /></p>}
 
               </li>
             })}
