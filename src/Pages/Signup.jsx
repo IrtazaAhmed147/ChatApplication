@@ -110,7 +110,7 @@ const Signup = () => {
       {isLoading && <div className='backgroundLoader'>
         <Loader />
       </div>}
-      <Navbar />
+      
       <div className='AuthMain'>
         <div className='AuthBox'>
 

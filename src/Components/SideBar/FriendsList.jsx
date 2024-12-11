@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { IoIosSearch } from "react-icons/io";
 import './SideBar.css'
-import List from './List';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFriendList, getUserName } from '../../Firebase/FirestoreFunctions';
 import { isUserFriend } from '../../Actions/FireStoreAction';

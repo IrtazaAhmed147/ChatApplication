@@ -69,7 +69,7 @@ const Login = () => {
         <Loader />
       </div>}
 
-      <Navbar />
+     
       <div className='AuthMain'>
         <div className='AuthBox'>
 

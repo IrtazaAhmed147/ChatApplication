@@ -22,7 +22,47 @@ h1{
 }
 .textshowArea{
     height: 480px;
+    overflow: scroll;
+    overflow-x: hidden;
 
+}
+.textshowArea ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    /* height: 100%; */
+    display: flex;
+   width: 100%;
+   flex-direction: column;
+   justify-content: end;
+    padding: 15px;
+   
+   gap: 10px;
+
+}
+.sender{
+    align-self: end;
+
+}
+.reciever{
+    align-self: start;
+}
+.textshowArea ul li {
+    background-color: #4343b6;
+    color: #fff;
+    /* font-size: 20px; */
+    padding: 3px 8px;
+    height: 40px;
+    min-width: 70px;
+    border-radius: 15px;
+    display: flex;
+    
+    
+}
+.timeStamp{
+    align-self: end;
+    font-size: 10px;
+    color: rgb(194, 192, 192);
 }
 .textArea{
     height: 70px;
