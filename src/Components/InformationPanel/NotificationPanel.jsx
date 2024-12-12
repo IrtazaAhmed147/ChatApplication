@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { addFriend, getFriendRequests, getUserName, rejectRequest } from '../../Firebase/FirestoreFunctions'
 import { useDispatch, useSelector } from 'react-redux';
 import { requestList } from '../../Actions/FireStoreAction';
+import { Button } from 'react-bootstrap';
 
 const NotificationPanel = () => {
 
@@ -21,7 +22,7 @@ const NotificationPanel = () => {
           setNotifications(notificationss);
           if (notificationss) {
 
-            dispatch(requestList(notificationss))
+            dispatch(requestList(notificationss)) 
           }
 
         } catch (error) {
@@ -91,14 +92,24 @@ const NotificationPanel = () => {
         overflow: 'scroll',
         overflowX: 'hidden',
         paddingBottom: '5px',
-        minHeight: '220px',
+        height: '100%',
 
       }}>
 
         <div>
-          <ul style={{ listStyle: 'none' }}>
+          <ul style={{ listStyle: 'none', padding: '0px' }}>
             {notifications.map((value) => {
-              return <li key={value.id}> <h3>{value.SenderId}</h3> <p>has sent you a friend request</p> <button onClick={() => acceptFriendRequest(value.SenderId, value.id)}>Add</button> <button onClick={() => handleReject(value.id)}>Reject</button></li>
+              return <li className='userBox' key={value.id}> 
+              <div>
+
+              <h3 style={{margin: '0px'}}>{value.SenderId}</h3> <p>has sent you a friend request</p> 
+              </div>
+              <div>
+
+              <Button variant='success' className='btn  me-3' onClick={() => acceptFriendRequest(value.SenderId, value.id)}>Add</Button> 
+              <Button variant='danger' className='btn' onClick={() => handleReject(value.id)}>Reject</Button>
+              </div>
+              </li>
             })}
 
 

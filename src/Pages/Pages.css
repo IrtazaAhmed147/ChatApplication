@@ -2,7 +2,7 @@
     width: 100%;
     height: 100%;
     background-color: #fff;
-    padding: 15px 0px 10px 10px;
+   
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -20,6 +20,15 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+.settingPage{
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    padding: 20px;
+}
+.settingPage ul{
+    list-style: none;
 }
 .logOutBtn{
     background-color: red;

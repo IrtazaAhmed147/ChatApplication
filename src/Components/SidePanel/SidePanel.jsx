@@ -7,13 +7,15 @@ import { Link } from 'react-router-dom'
 
 const SidePanel = () => {
   return (
+    <>
     <div className='sidePanel'>
             <ul >
                 <li><Link to='/chats'><IoPeople /></Link></li>
-                <li><IoMdSettings /></li>
+                <li><Link to='/settings'><IoMdSettings /></Link></li>
                 <li><Link to='/findpeople'><FaSearch /></Link></li>
             </ul>
     </div>
+    </>
   )
 }
 

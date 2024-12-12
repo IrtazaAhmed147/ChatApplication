@@ -11,18 +11,25 @@ const MainChatArea = (props) => {
     if (props.sender.displayName && props.reciever?.[0]?.userName) {
 
       const unsubscribe = getMessages(props.sender.displayName, props.reciever[0].userName, (newMessages) => {
-        setMessages(newMessages);
+        const sortedMessages = newMessages.sort((a, b) => {
+          const aTime = a.time?.seconds || 0;  
+          const bTime = b.time?.seconds || 0;
+          return aTime - bTime; 
+        });
+        setMessages(sortedMessages);
       });
 
+     
       return () => {
-        unsubscribe();
+        if (typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
       };
     }
 
-    // Cleanup listener on component unmount
+ 
   }, [props.sender.displayName, props.reciever])
-  console.log(messages?.[0]?.time)
-
+  
 
 
   const handleSend = () => {
@@ -78,10 +85,10 @@ const MainChatArea = (props) => {
 
 
     <div className='mainArea'>
-      <div className='textshowArea'>
+      <div className='textshowArea scrollable-container'>
         <ul>
           {messages.map((msg) => (
-            <li key={msg.time} className={props.sender.displayName === msg.SenderId ? 'sender': 'reciever'}><p>{msg.message}</p> <p className='timeStamp'>{
+            <li key={msg.time} className={props.sender.displayName === msg.SenderId ? 'sender' : 'reciever'}><p>{msg.message}</p> <p className='timeStamp'>{
               // convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds })
               msg.time ? convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds }) : "Loading time..."
 

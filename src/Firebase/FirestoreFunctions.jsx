@@ -51,13 +51,7 @@ export const getUserName = async (dispatch) => {
 }
 
 
-// export const checkUser = async (userName) => {
-//   const collectionRef = collection(fireStore, "Users")
-//   const q = query(collectionRef, where('userName', '==', userName))
-//   const res = await getDocs(q)
 
-//   return res
-// }
 
 export const sendRequest = async (SenderId, RecieverId) => {
   console.log("SenderId:", SenderId, "RecieverId:", RecieverId);
@@ -77,31 +71,6 @@ export const sendRequest = async (SenderId, RecieverId) => {
 
 
 
-// export const getFriendRequests = async () => {
-//   try {
-
-//     const querySnapshot = await getDocs(collection(db, "FriendRequests"));
-
-//     // Create an array to store users
-//     const invitations = [];
-
-//     // Loop through the documents and add them to the array
-//     querySnapshot.forEach((doc) => {
-//       invitations.push({
-//         id: doc.id,
-//         ...doc.data(),  // spread the document data
-//       });
-//     });
-
-//     // Return the users array
-//     return invitations;
-//   } catch (error) {
-//     console.log(error.message)
-//     throw error
-//   }
-
-
-// }
 export const getFriendRequests = async (userId) => {
   try {
     const q = query(
@@ -125,20 +94,29 @@ export const getFriendRequests = async (userId) => {
     throw error;
   }
 };
+export const getSendedRequest = async (userId) => {
+  try {
+    const q = query(
+      collection(db, "FriendRequests"),
+      where("SenderId", "==", userId), // Only fetch requests where RecieverId matches the user
+    );
 
-// export const FindReceiver = async (recieverId) => {
-//   console.log(recieverId)
-//   try{
+    const querySnapshot = await getDocs(q);
+    const invitations = [];
 
-//     const collectionRef = collection(db, "FriendRequests")
-//     const q = query(collectionRef, where('RecieverId', '==', recieverId))
-//     const res = await getDocs(q)
-//     console.log(res)
-//     return res
-//   } catch (error) {
-//     throw error
-//   }
-// }
+    querySnapshot.forEach((doc) => {
+      invitations.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return invitations;
+  } catch (error) {
+    console.log(error.message);
+    throw error;
+  }
+};
 
 
 export const rejectRequest = async (id) => {
@@ -182,3 +160,5 @@ export const getFriendList = async (userId)=> {
     throw error
   }
 }
+
+

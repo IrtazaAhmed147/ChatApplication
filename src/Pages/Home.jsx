@@ -4,6 +4,7 @@ import { checkUser } from '../Firebase/AuthFunctions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getUserName } from '../Firebase/FirestoreFunctions'
+import SidePanel from '../Components/SidePanel/SidePanel'
 const Home = () => {
 
 
@@ -11,7 +12,7 @@ const Home = () => {
   const navigate = useNavigate()
 
   const data = useSelector((state) => state.auth);
- 
+  console.log(data)
 
   useEffect(() => {
     checkUser(dispatch);  
@@ -19,7 +20,7 @@ const Home = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!data) {
+    if (!data.isUser) {
       navigate('/login')
     
     }
@@ -29,6 +30,7 @@ const Home = () => {
   return (
     <>
       
+      <SidePanel   />
         
     </>
   )

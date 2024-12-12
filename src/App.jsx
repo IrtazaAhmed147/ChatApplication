@@ -13,8 +13,13 @@ import ChatlistPage from './Pages/ChatlistPage';
 import ChatwindowPage from './Pages/ChatwindowPage';
 import FindPeoplePage from './Pages/FindPeoplePage';
 import SidePanel from './Components/SidePanel/SidePanel';
+import SettingPage from './Pages/SettingPage';
 
 function App() {
+
+
+  console.log(window.location.pathname)
+
   return (
     <>
       <Router>
@@ -28,16 +33,15 @@ function App() {
           <div className='box'>
             <Navbar />
             <div className='contentBox'>
-              {/* <ChatlistPage />
-            
-            <ChatwindowPage />
-            <FindPeoplePage /> */}
-              <SidePanel />
+       
+              {/* {(window.location.pathname === '/' || window.location.pathname === '/chats' || window.location.pathname === '/findpeople') && <SidePanel /> } */}
               <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/chats' element={<ChatlistPage />} />
+                <Route path='/settings' element={<SettingPage />} />
                 <Route path='/chat/:userId' element={<ChatwindowPage />} />
                 <Route path='/findpeople' element={<FindPeoplePage />} />
+
 
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<Signup />} />
