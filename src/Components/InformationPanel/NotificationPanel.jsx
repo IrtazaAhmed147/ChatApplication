@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { addFriend, getFriendRequests, getUserName, rejectRequest } from '../../Firebase/FirestoreFunctions'
+import { addFriend, getFriendRequests, rejectRequest } from '../../Firebase/FirestoreFunctions'
 import { useDispatch, useSelector } from 'react-redux';
 import { requestList } from '../../Actions/FireStoreAction';
 import { Button } from 'react-bootstrap';

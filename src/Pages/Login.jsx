@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../Components/Navbar'
+import React, { useEffect, useRef, useState } from 'react'
 import './Auth.css'
 import { IoEye, IoEyeOff } from 'react-icons/io5'
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,15 +9,19 @@ import Loader from '../Components/Loader'
 
 const Login = () => {
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [password, setPassword] = useState('')
   const [isError, setIsError] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const emailText = useRef("")
+  const passText = useRef("")
 
   const dispatch = useDispatch()
   const data = useSelector((state) => state.auth);
+  console.log(data);
+  
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -34,12 +37,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const email = emailText.current
+    const pass = passText.current
+
     setIsLoading(true);
     setIsError(false);
     setError("");
     try {
 
-      const signInUsers = await loginUser(email, password)
+      const signInUsers = await loginUser(email, pass)
 
       if (signInUsers && signInUsers.user) {
 
@@ -79,12 +86,12 @@ const Login = () => {
 
             <div>
 
-              <input className='input' onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Email Address' required />
+              <input className='input' onChange={(e) => emailText.current = e.target.value} type="email" placeholder='Email Address' required />
 
             </div>
             <div>
               <div className='passIcon'>
-                <input className='passInput' onChange={(e) => setPassword(e.target.value)} type={showPass ? 'text' : 'password'} placeholder='Password' required />
+                <input className='passInput' onChange={(e) => passText.current = e.target.value} type={showPass ? 'text' : 'password'} placeholder='Password' required />
                 {showPass && <IoEye onClick={() => setShowPass(false)} size={30} color='black' />}
                 {!showPass && <IoEyeOff onClick={() => setShowPass(true)} size={30} color='black' />}
               </div>

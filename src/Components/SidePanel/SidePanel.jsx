@@ -6,13 +6,22 @@ import './panel.css'
 import { Link } from 'react-router-dom'
 
 const SidePanel = () => {
+
+  const style = {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+
   return (
     <>
     <div className='sidePanel'>
             <ul >
-                <li><Link to='/chats'><IoPeople /></Link></li>
-                <li><Link to='/settings'><IoMdSettings /></Link></li>
-                <li><Link to='/findpeople'><FaSearch /></Link></li>
+                <li><Link style={style}  to='/chats'><IoPeople /></Link></li>
+                <li><Link style={style} to='/settings'><IoMdSettings /></Link></li>
+                <li><Link style={style} to='/findpeople'><FaSearch /></Link></li>
             </ul>
     </div>
     </>

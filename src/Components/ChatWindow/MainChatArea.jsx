@@ -6,6 +6,9 @@ const MainChatArea = (props) => {
   const [userInput, setUserInput] = useState('')
   const tempTextRef = useRef("")
   const [messages, setMessages] = useState([]);
+  
+
+  
 
   useEffect(() => {
     if (props.sender.displayName && props.reciever?.[0]?.userName) {

@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { auth } from "./Firebase";
+import { auth, dbApp } from "./Firebase";
 import { setUserAction } from "../Actions/AuthAction";
+import { onDisconnect, ref, set } from "firebase/database";
 
 // Function to create a user
 export const createUser = async (email, password, userName) => {
@@ -31,7 +32,23 @@ export const checkUser = (dispatch) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in
-        
+        console.log(user)
+
+        const userStatusRef = ref(dbApp, `status/${user.displayName}`);
+
+        // Set the user's status to online
+        set(userStatusRef, {
+          state: "online",
+          last_changed: Date.now(),
+        });
+  
+        // Set the user's status to offline when they disconnect
+        onDisconnect(userStatusRef).set({
+          state: "offline",
+          last_changed: Date.now(),
+        });
+  
+
       dispatch(setUserAction({
         uid: user.uid,
         email: user.email,

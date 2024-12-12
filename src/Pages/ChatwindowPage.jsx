@@ -4,46 +4,62 @@ import ChatHeader from '../Components/ChatWindow/ChatHeader'
 import { useNavigate, useParams } from 'react-router-dom'
 import MainChatArea from '../Components/ChatWindow/MainChatArea'
 import { useSelector } from 'react-redux'
+import { fetchUserLastOnlineTime } from '../Firebase/RealTimedbFunction'
 const ChatwindowPage = () => {
 
   const data = useSelector((state) => state.fireStore);
   const auth = useSelector((state) => state.auth);
-  console.log(auth)
+  const [lastSeen, setLastSeen] = useState("Loading...");
+  const [user, setUser] = useState([])
   const navigate = useNavigate()
   useEffect(() => {
-    if (auth.isUser === false) {
+    if (!auth.isUser) {
       navigate('/chats')
-    
     }
-    
-  }, [data, navigate])
-  const [user, setUser] = useState([])
-  console.log(data)
+  }, [data, navigate, auth.isUser])
 
   const param = useParams()
-  console.log(param)
+
   useEffect(()=> {
+    if(user.length !== 0) {
+      console.log(user)
+      try{
+
+        const getLastOnlineTime = async () => {
+          const status = await fetchUserLastOnlineTime(user[0].userName);
+          setLastSeen(status);
+          console.log(status) 
+          console.log(lastSeen)
+        };
+        
+        getLastOnlineTime();
+      } catch (e) {
+        console.log(e.message)
+      }
+      }
+    }, [user, lastSeen])
+
+  useEffect(() => {
     try {
       if (data) {
-  
-        const userr = data.friends?.filter((value)=> {
-          return  value.userUid === param.userId
+
+        const userr = data.friends?.filter((value) => {
+          return value.userUid === param.userId
         })
         const res = userr
         setUser(res)
-        console.log(res)
       }
-      
+
     } catch (error) {
       console.log(error)
     }
-  }, [data])
+  }, [data, param.userId])
 
 
   return (
     <div className='chatWindowPageBox'>
-     <ChatHeader user={user}/>
-      <MainChatArea reciever={user} sender={auth.isUser}  />
+      <ChatHeader user={user} lastSeen={lastSeen}/>
+      <MainChatArea reciever={user} sender={auth.isUser} />
     </div>
   )
 }

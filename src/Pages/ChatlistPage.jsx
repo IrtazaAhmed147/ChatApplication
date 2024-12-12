@@ -18,9 +18,15 @@ const ChatlistPage = () => {
  
 
   useEffect(() => {
-    checkUser(dispatch);  
-    getUserName(dispatch)
-  }, [dispatch]);
+       if (!data.isUser) {
+         checkUser(dispatch);  
+         
+       }
+       if (!data.userDetails) {
+     
+         getUserName(dispatch)
+       }
+  }, [dispatch,  data.isUser, data.userDetails]);
 
   useEffect(() => {
     if (!data.isUser) {

@@ -10,13 +10,18 @@ const Home = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  
 
   const data = useSelector((state) => state.auth);
   console.log(data)
 
   useEffect(() => {
     checkUser(dispatch);  
-    getUserName(dispatch)
+    getUserName(dispatch);
+  
+  
+  //  const currUser = data.isUser.displayName
+  //  if(data.isUser.displayName === onlineUsers) 
   }, [dispatch]);
 
   useEffect(() => {
