@@ -1,28 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './ChatWindow.css'
-import { getMessages, sendMessage } from '../../Firebase/MessageFunctions'
+import { deletMsg, getMessages, sendMessage } from '../../Firebase/MessageFunctions'
+import { ListGroup } from 'react-bootstrap'
+import { MdDelete } from 'react-icons/md'
 const MainChatArea = (props) => {
 
   const [userInput, setUserInput] = useState('')
   const tempTextRef = useRef("")
   const [messages, setMessages] = useState([]);
-  
+  const [isHolding, setIsHolding] = useState(false)
+  const [currMsgId, setCurrMsgId] = useState('')
 
-  
+  const delay = 1000;
+  let startPress = null;
 
   useEffect(() => {
+
+    if (!props.onlineStatus) {
+      console.log(props.onlineStatus)
+      return;
+    }
+
     if (props.sender.displayName && props.reciever?.[0]?.userName) {
 
       const unsubscribe = getMessages(props.sender.displayName, props.reciever[0].userName, (newMessages) => {
         const sortedMessages = newMessages.sort((a, b) => {
-          const aTime = a.time?.seconds || 0;  
+          const aTime = a.time?.seconds || 0;
           const bTime = b.time?.seconds || 0;
-          return aTime - bTime; 
+          return aTime - bTime;
         });
+
         setMessages(sortedMessages);
       });
 
-     
+
       return () => {
         if (typeof unsubscribe === 'function') {
           unsubscribe();
@@ -30,9 +41,20 @@ const MainChatArea = (props) => {
       };
     }
 
- 
-  }, [props.sender.displayName, props.reciever])
-  
+
+  }, [props.sender.displayName, props.reciever, props.onlineStatus])
+
+  useEffect(() => {
+    const clickOutSide = () => {
+      setIsHolding(false)
+      setCurrMsgId('')
+    }
+    document.addEventListener('mousedown', clickOutSide)
+    return () => {
+      document.removeEventListener('mousedown', clickOutSide);
+    };
+
+  }, [])
 
 
   const handleSend = () => {
@@ -81,6 +103,31 @@ const MainChatArea = (props) => {
   }
 
 
+  function mouseDown(id) {
+    console.log('asdf')
+    startPress = Date.now();
+    setCurrMsgId(id)
+  }
+
+  function mouseUp(id) {
+    console.log('chala')
+    if (Date.now() - startPress > delay) {
+      setCurrMsgId(id)
+      setIsHolding(true)
+    }
+  }
+  const handleDelMsg = async (sender, reciever, id) => {
+    console.log('delete msg')
+    try {
+      await deletMsg(sender, reciever, id)
+
+    } catch (error) {
+      console.log(error)
+    }
+    console.log(id)
+  }
+
+
   if (!props.reciever?.[0]?.userName) return <h1>Loading</h1>
 
   return (
@@ -90,12 +137,17 @@ const MainChatArea = (props) => {
     <div className='mainArea'>
       <div className='textshowArea scrollable-container'>
         <ul>
+        {!props.onlineStatus && <div className='ms-4' style={{ color: "red" }}>No Internet Connection</div>}
           {messages.map((msg) => (
-            <li key={msg.time} className={props.sender.displayName === msg.SenderId ? 'sender' : 'reciever'}><p>{msg.message}</p> <p className='timeStamp'>{
-              // convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds })
-              msg.time ? convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds }) : "Loading time..."
-
-            }</p></li>
+            <li onMouseDown={() => mouseDown(msg.id)} onMouseUp={() => mouseUp(msg.id)} key={msg.id} className={props.sender.displayName === msg.SenderId ? 'sender' : 'reciever'}>
+              {currMsgId === msg.id && isHolding && <ListGroup onMouseDown={(e) => e.stopPropagation()}>
+                <ListGroup.Item onClick={(e) => { e.stopPropagation(); handleDelMsg(msg.SenderId, msg.RecieverId, msg.id); }}>Delete <MdDelete /></ListGroup.Item>
+                <ListGroup.Item onClick={(e) => e.stopPropagation()}>Copy</ListGroup.Item>
+              </ListGroup>}
+              <p>{msg.message}</p> <p className='timeStamp'>{
+                msg.time ? convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds }) : "Loading time..."
+              }</p>
+            </li>
           ))}
 
         </ul>
@@ -103,7 +155,8 @@ const MainChatArea = (props) => {
       <div className='textArea'>
         <div className='textBox'>
 
-          <input type="text" id="messageInput" onChange={(e) => tempTextRef.current = e.target.value} /> <button onClick={handleSend}>send</button>
+          <input type="text" id="messageInput" onChange={(e) => tempTextRef.current = e.target.value} />
+           <button disabled={!props.onlineStatus}  onClick={handleSend}>send</button>
         </div>
       </div>
     </div>

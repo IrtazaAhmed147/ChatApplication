@@ -5,12 +5,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import MainChatArea from '../Components/ChatWindow/MainChatArea'
 import { useSelector } from 'react-redux'
 import { fetchUserLastOnlineTime } from '../Firebase/RealTimedbFunction'
+import { isOnline, networkListener } from '../Utility/CheckNetwork'
 const ChatwindowPage = () => {
 
   const data = useSelector((state) => state.fireStore);
   const auth = useSelector((state) => state.auth);
   const [lastSeen, setLastSeen] = useState("Loading...");
   const [user, setUser] = useState([])
+  const [onlineStatus, setOnlineStatus] = useState(isOnline());
   const navigate = useNavigate()
   useEffect(() => {
     if (!auth.isUser) {
@@ -19,6 +21,16 @@ const ChatwindowPage = () => {
   }, [data, navigate, auth.isUser])
 
   const param = useParams()
+
+   useEffect(() => {
+      const cleanupListeners = networkListener(
+        () => setOnlineStatus(true),
+        () => setOnlineStatus(false)
+      );
+      console.log('asdf')
+  
+      return cleanupListeners; // Cleanup on component unmount
+    }, []);
 
   useEffect(()=> {
     if(user.length !== 0) {
@@ -59,7 +71,7 @@ const ChatwindowPage = () => {
   return (
     <div className='chatWindowPageBox'>
       <ChatHeader user={user} lastSeen={lastSeen}/>
-      <MainChatArea reciever={user} sender={auth.isUser} />
+      <MainChatArea onlineStatus={onlineStatus} reciever={user} sender={auth.isUser} />
     </div>
   )
 }

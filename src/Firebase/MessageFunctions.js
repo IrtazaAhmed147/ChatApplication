@@ -1,4 +1,4 @@
-import { addDoc, collection,  onSnapshot, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection,  deleteDoc,  doc,  onSnapshot, serverTimestamp } from "firebase/firestore";
 import { db } from "./Firebase";
 
 export const sendMessage = async (SenderId, RecieverId, msg) => {
@@ -61,5 +61,27 @@ export const getMessages = async (SenderId, RecieverId, callback) => {
   } catch (error) {
     console.error("Error fetching messages:", error);
     throw error;
+  }
+}
+
+
+
+export const deletMsg = async (SenderId,RecieverId,id) => {
+  try {
+
+    const sender = SenderId.toLowerCase();
+    const receiver = RecieverId.toLowerCase();
+
+    // Generate unique chatId
+    const chatId = sender < receiver
+      ? `${sender}_${receiver}`
+      : `${receiver}_${sender}`;
+
+    const delRef = doc(db, `chats/${chatId}/messages`, id)
+    const res = await deleteDoc(delRef)
+    return res
+  } catch (error) {
+    console.log(error)
+    throw error
   }
 }

@@ -52,7 +52,7 @@ const AddPeoplePanel = () => {
         const avalaibleUsers = fetchedUsers.filter((user) => {
           return (user.userName === currentUserName) && (user.userName !== data.isUser.displayName)
         });
-        console.log(avalaibleUsers)
+        console.log(avalaibleUsers) 
         setUsers(avalaibleUsers)
         if (avalaibleUsers.length !== 0) {
           const pendingUser = pendingUsers?.filter((user) => {

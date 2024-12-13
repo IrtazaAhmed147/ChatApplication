@@ -66,6 +66,7 @@ p{
     border-radius: 15px;
     display: flex;
     gap: 15px;
+    position: relative;
     
 }
 .timeStamp{
@@ -108,6 +109,18 @@ p{
     border-bottom-right-radius: 12px;
     font-size: 20px;
 }
+.list-group{
+    position: absolute;
+    top: -88px;
+    left: -40px;
+
+}
 
 
-
+.list-group-item{
+    cursor: pointer;
+    
+}
+.list-group-item:hover{
+    background-color: #dfdede;
+}

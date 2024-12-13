@@ -7,7 +7,7 @@ import { isUserFriend } from '../../Actions/FireStoreAction';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader'
 
-const FriendsList = () => {
+const FriendsList = (props) => {
 
     const data = useSelector((state) => state.auth);
     const [user, setUser] = useState([])
@@ -17,6 +17,12 @@ const FriendsList = () => {
     useEffect(() => {
 
         const fetchFriends = async () => {
+
+            if (!props.onlineStatus) {
+                console.log(props.onlineStatus)
+                return;
+            }
+
             setError(true)
             try {
                 // setError(true)
@@ -43,7 +49,7 @@ const FriendsList = () => {
 
         fetchFriends();
 
-    }, [data.isUser?.displayName, data.userDetails, dispatch])
+    }, [data.isUser?.displayName, data.userDetails, dispatch, props.onlineStatus])
 
     const navigate = useNavigate()
     const handleChat = (id) => {
@@ -72,6 +78,7 @@ const FriendsList = () => {
 
                 }}>
 
+                    {!props.onlineStatus && <div className='ms-4' style={{ color: "red" }}>No Internet Connection</div>}
                     {/* <div> */}
                     <ul style={{ listStyle: 'none', padding: '0px', justifyContent: error ? 'center' : 'start', marginBottom: "0px" }}>
                         {error && <Loader />}
