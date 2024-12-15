@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getUserName } from '../Firebase/FirestoreFunctions'
 import SidePanel from '../Components/SidePanel/SidePanel'
-import { requestFunction } from '../Utility/NotificationPermission'
+// import { requestFunction } from '../Utility/NotificationPermission'
 const Home = () => {
 
 
@@ -14,16 +14,18 @@ const Home = () => {
   
 
   const data = useSelector((state) => state.auth);
-  console.log(data)
 
   useEffect(() => {
     checkUser(dispatch);  
     getUserName(dispatch);
   }, [dispatch]);
 
-  useEffect(()=> {
-    requestFunction()
-  })
+  // useEffect(()=> {
+  //   if(data?.isUser) {
+
+  //     requestFunction(data.isUser.displayName)
+  //   }
+  // }, [data?.isUser])
 
   useEffect(() => {
     if (!data.isUser) {

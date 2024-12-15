@@ -14,7 +14,6 @@ const FindPeoplePage = () => {
   const navigate = useNavigate()
 
   const data = useSelector((state) => state.auth);
-  console.log(data)
  
 
   useEffect(() => {

@@ -61,6 +61,7 @@
   }
   .contentBox {
     flex-direction: column;
+    height: 88%;
   }
  
   .sidePanel ul{

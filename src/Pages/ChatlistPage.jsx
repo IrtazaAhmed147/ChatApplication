@@ -22,7 +22,6 @@ const ChatlistPage = () => {
       () => setOnlineStatus(true),
       () => setOnlineStatus(false)
     );
-    console.log('asdf')
 
     return cleanupListeners; // Cleanup on component unmount
   }, []);

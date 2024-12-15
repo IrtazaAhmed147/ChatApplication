@@ -2,7 +2,6 @@ import { addDoc, collection,  deleteDoc,  doc,  onSnapshot, serverTimestamp } fr
 import { db } from "./Firebase";
 
 export const sendMessage = async (SenderId, RecieverId, msg) => {
-  console.log("SenderId:", SenderId, "RecieverId:", RecieverId);
 
   try {
 
@@ -15,13 +14,12 @@ export const sendMessage = async (SenderId, RecieverId, msg) => {
       : `${receiver}_${sender}`;
 
 
-    const docRef = await addDoc(collection(db, `chats/${chatId}/messages`), {
+   await addDoc(collection(db, `chats/${chatId}/messages`), {
       SenderId,
       RecieverId,
       message: msg,
       time: serverTimestamp(),
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
     throw e

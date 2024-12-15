@@ -27,21 +27,18 @@ const ChatwindowPage = () => {
         () => setOnlineStatus(true),
         () => setOnlineStatus(false)
       );
-      console.log('asdf')
   
       return cleanupListeners; // Cleanup on component unmount
     }, []);
 
   useEffect(()=> {
     if(user.length !== 0) {
-      console.log(user)
       try{
 
         const getLastOnlineTime = async () => {
           const status = await fetchUserLastOnlineTime(user[0].userName);
           setLastSeen(status);
-          console.log(status) 
-          console.log(lastSeen)
+       
         };
         
         getLastOnlineTime();

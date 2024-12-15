@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 import { FaCheck } from 'react-icons/fa'
 import Loader from '../Loader'
 import { Button } from 'react-bootstrap'
-
 const AddPeoplePanel = () => {
 
   const [users, setUsers] = useState([])
@@ -17,14 +16,16 @@ const AddPeoplePanel = () => {
   const tempTextRef = useRef("")
   const [pendingUsers, setPendingUsers] = useState([])
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [loader, setLoader] = useState(false)
   const data = useSelector((state) => state.auth);
 
   const fireStoreData = useSelector((state) => state.fireStore);
-  console.log(fireStoreData)
+  
   useEffect(() => {
     const fetchSendedRequest = async () => {
       try {
         const SendedRequestsArr = await getSendedRequest(data.isUser.displayName)
+        console.log(data.isUser.displayName)
         const res = SendedRequestsArr
         setPendingUsers(res)
       } catch (error) {
@@ -32,14 +33,12 @@ const AddPeoplePanel = () => {
       }
 
     }
-    console.log('useEffect')
     fetchSendedRequest()
   }, [data.isUser.displayName, triggerUpdate])
 
 
   const handleSearchFriend = () => {
     const currentUserName = tempTextRef.current
-    // const currentUserName = e.target.value;
 
     const fetchUsers = async () => {
       setError(true)
@@ -52,7 +51,6 @@ const AddPeoplePanel = () => {
         const avalaibleUsers = fetchedUsers.filter((user) => {
           return (user.userName === currentUserName) && (user.userName !== data.isUser.displayName)
         });
-        console.log(avalaibleUsers) 
         setUsers(avalaibleUsers)
         if (avalaibleUsers.length !== 0) {
           const pendingUser = pendingUsers?.filter((user) => {
@@ -60,7 +58,6 @@ const AddPeoplePanel = () => {
           })
 
           setIsPending(pendingUser.length !== 0 ? true : false)
-          console.log(pendingUser)
         }
 
 
@@ -91,14 +88,16 @@ const AddPeoplePanel = () => {
   }
   const addFriendBtn = async () => {
     try {
-
-      // console.log(data.isUser.displayName, users[0].userName)
+      setLoader(true)
+      
       await sendRequest(data.isUser.displayName, users[0].userName)
       setTriggerUpdate((prev) => !prev);
       setIsPending(true)
-      console.log(triggerUpdate)
     } catch (error) {
       console.log(error)
+    } finally {
+
+      setLoader(false)
     }
   }
 
@@ -146,8 +145,8 @@ const AddPeoplePanel = () => {
                   }}>{user.name}</p>
                   <p className='username'>{user.userName}</p>
                 </span>
-
-                {!isPending && !isFriend && <button className='cssbuttons-io-button' onClick={addFriendBtn}>
+                  {loader && <Loader />}
+                {!loader  && !isPending && !isFriend && <button className='cssbuttons-io-button' onClick={addFriendBtn}>
                   <svg
                     height="24"
                     width="24"

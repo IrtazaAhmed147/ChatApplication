@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, serverTimestamp, where, query, doc, deleteDoc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, getDocs, serverTimestamp, where, query, doc, deleteDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { demoUser } from "../Actions/AuthAction";
 
@@ -6,13 +6,12 @@ import { demoUser } from "../Actions/AuthAction";
 export const demoFunc = async (email, userName, name, userUid) => {
 
   try {
-    const docRef = await addDoc(collection(db, "Users"), {
+    await addDoc(collection(db, "Users"), {
       userName,
       name,
       email,
       userUid,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -54,15 +53,13 @@ export const getUserName = async (dispatch) => {
 
 
 export const sendRequest = async (SenderId, RecieverId) => {
-  console.log("SenderId:", SenderId, "RecieverId:", RecieverId);
   try {
-    const docRef = await addDoc(collection(db, "FriendRequests"), {
+    await addDoc(collection(db, "FriendRequests"), {
       SenderId,
       RecieverId,
       status: 'Pending',
       time: serverTimestamp(),
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
     throw e
@@ -135,12 +132,11 @@ export const rejectRequest = async (id) => {
 export const addFriend = async (userId, user) => {
   try {
     const collectionRef = collection(db, 'Users', userId, 'Friends')
-    const result = await addDoc(collectionRef, {
+    await addDoc(collectionRef, {
       userName: user.userName,
       name: user.name,
       userUid: user.userUid,
     })
-    console.log(result)
   } catch (error) {
     console.log(error)
     throw error

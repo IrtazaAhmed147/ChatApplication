@@ -26,7 +26,6 @@ const Signup = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const data = useSelector((state) => state.auth);
-  console.log(data);
 
 
   useEffect(() => {

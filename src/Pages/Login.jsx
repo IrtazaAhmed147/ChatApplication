@@ -20,7 +20,6 @@ const Login = () => {
 
   const dispatch = useDispatch()
   const data = useSelector((state) => state.auth);
-  console.log(data);
   
   const navigate = useNavigate()
 

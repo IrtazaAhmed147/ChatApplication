@@ -19,7 +19,6 @@ const FriendsList = (props) => {
         const fetchFriends = async () => {
 
             if (!props.onlineStatus) {
-                console.log(props.onlineStatus)
                 return;
             }
 
@@ -36,7 +35,6 @@ const FriendsList = (props) => {
                         const friendData = friendListSnapshot.docs.map((d) => d.data());
                         setUser(friendData); // Correctly updates the user state.
                         dispatch(isUserFriend(friendData))
-                        console.log(friendData)
                     }
                 }
             } catch (error) {

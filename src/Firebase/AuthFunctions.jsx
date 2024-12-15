@@ -11,7 +11,6 @@ export const createUser = async (email, password, userName) => {
     await updateProfile(user, { displayName: userName });
 
 
-    console.log("User created successfully:", user); // User signed up successfully
     return {
       uid: user.uid,
       email: user.email,
@@ -22,7 +21,6 @@ export const createUser = async (email, password, userName) => {
   } catch (error) {
 
     throw new Error(error.message);
-    // console.error(`Error Code: ${errorCode}, Message: ${errorMessage}`);
   }
 };
 
@@ -31,8 +29,7 @@ export const createUser = async (email, password, userName) => {
 export const checkUser = (dispatch) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in
-        console.log(user)
+     
 
         const userStatusRef = ref(dbApp, `status/${user.displayName}`);
 
@@ -68,7 +65,7 @@ export const loginUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
-    console.log(user)
+   
     return user
 
   } catch (error) {

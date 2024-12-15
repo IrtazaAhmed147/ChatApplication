@@ -3,6 +3,7 @@ import './ChatWindow.css'
 import { deletMsg, getMessages, sendMessage } from '../../Firebase/MessageFunctions'
 import { ListGroup } from 'react-bootstrap'
 import { MdDelete } from 'react-icons/md'
+// import { getTokenFromDb } from '../../Firebase/CloudMessaging'
 const MainChatArea = (props) => {
 
   const [userInput, setUserInput] = useState('')
@@ -66,6 +67,8 @@ const MainChatArea = (props) => {
     const handleSendMsg = async () => {
       try {
         if (text && props.reciever[0].userName && props.sender.displayName) {
+          // await getTokenFromDb(props.reciever[0].userName, text)
+
           await sendMessage(props.sender.displayName, props.reciever[0].userName, text)
           console.log('msg sended')
 
