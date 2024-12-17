@@ -10,6 +10,10 @@ const ChatwindowPage = () => {
 
   const data = useSelector((state) => state.fireStore);
   const auth = useSelector((state) => state.auth);
+       
+      
+        const {theme} = data
+   
   const [lastSeen, setLastSeen] = useState("Loading...");
   const [user, setUser] = useState([])
   const [onlineStatus, setOnlineStatus] = useState(isOnline());
@@ -66,9 +70,9 @@ const ChatwindowPage = () => {
 
 
   return (
-    <div className='chatWindowPageBox'>
-      <ChatHeader user={user} lastSeen={lastSeen}/>
-      <MainChatArea onlineStatus={onlineStatus} reciever={user} sender={auth.isUser} />
+    <div className='chatWindowPageBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
+      <ChatHeader theme={theme} user={user} lastSeen={lastSeen}/>
+      <MainChatArea theme={theme} onlineStatus={onlineStatus} reciever={user} sender={auth.isUser} />
     </div>
   )
 }

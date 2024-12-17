@@ -14,6 +14,10 @@ const FindPeoplePage = () => {
   const navigate = useNavigate()
 
   const data = useSelector((state) => state.auth);
+     const dataTheme = useSelector((state)=> state.fireStore)
+     
+    
+      const {theme} = dataTheme
  
 
   useEffect(() => {
@@ -37,8 +41,8 @@ const FindPeoplePage = () => {
   return (
     <>
     <SidePanel />
-    <div className='findPeoplePageBox'>
-      <AddPeoplePanel />
+    <div className='findPeoplePageBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
+      <AddPeoplePanel theme={theme}/>
       <NotificationPanel />
     </div>
     </>

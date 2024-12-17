@@ -16,6 +16,10 @@ const ChatlistPage = () => {
   const navigate = useNavigate()
 
   const data = useSelector((state) => state.auth);
+  const dataTheme = useSelector((state)=> state.fireStore)
+ 
+
+  const {theme} = dataTheme
 
   useEffect(() => {
     const cleanupListeners = networkListener(
@@ -49,15 +53,15 @@ const ChatlistPage = () => {
   return (
     <>
       <SidePanel />
-      <div className='chatListPageBox'>
+      <div className='chatListPageBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '10%    '
+          height: '10%'
         }}>
 
-          <h1 style={{ margin: '10px 0px 0px 3%' }}>Chats</h1>
+          <h1 style={{ margin: '10px 0px 0px 3%', color: theme === 'light' ? 'black' : 'var(--dark-text-color)' }}>Chats</h1>
 
 
         </div>

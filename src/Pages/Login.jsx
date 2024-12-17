@@ -50,7 +50,7 @@ const Login = () => {
       if (signInUsers && signInUsers.user) {
 
         dispatch(signInUser(signInUsers))
-
+        window.location.reload();
 
       }
     } catch (error) {

@@ -1,10 +1,12 @@
 const initialState = {
     friendRequestList: [],
-    friends: []
+    friends: [],
+    theme: ''
 }
 
 export const fireStoreFunc = (state = initialState, action) => {
     
+    console.log(action.payload)
     switch (action.type) {
         case 'REQUESTLIST': return {
             ...state, 
@@ -19,6 +21,11 @@ export const fireStoreFunc = (state = initialState, action) => {
                 ...state,
                 friends: action.payload
             } 
+            case 'THEME' : return {
+                ...state,
+
+                theme: action.payload
+            }
   
     
         default: return state

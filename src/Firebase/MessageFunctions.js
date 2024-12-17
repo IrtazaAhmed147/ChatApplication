@@ -1,24 +1,23 @@
-import { addDoc, collection,  deleteDoc,  doc,  onSnapshot, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection,  deleteDoc,  doc,  getDocs,  onSnapshot, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "./Firebase";
 
 export const sendMessage = async (SenderId, RecieverId, msg) => {
 
   try {
 
-    const sender = SenderId.toLowerCase();
-    const receiver = RecieverId.toLowerCase();
 
     // Generate unique chatId
-    const chatId = sender < receiver
-      ? `${sender}_${receiver}`
-      : `${receiver}_${sender}`;
+    const chatId = SenderId.uid < RecieverId.userUid
+      ? `${SenderId.uid}_${RecieverId.userUid}`
+      : `${RecieverId.userUid}_${SenderId.uid}`;
 
 
    await addDoc(collection(db, `chats/${chatId}/messages`), {
-      SenderId,
-      RecieverId,
+      SenderId: SenderId.displayName,
+      RecieverId : RecieverId.userName,
       message: msg,
       time: serverTimestamp(),
+      seen: false,
     });
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -29,13 +28,10 @@ export const sendMessage = async (SenderId, RecieverId, msg) => {
 
 export const getMessages = async (SenderId, RecieverId, callback) => {
   try {
-    const sender = SenderId.toLowerCase();
-    const receiver = RecieverId.toLowerCase();
+    const chatId = SenderId.uid < RecieverId.userUid
+    ? `${SenderId.uid}_${RecieverId.userUid}`
+    : `${RecieverId.userUid}_${SenderId.uid}`;
 
-    // Generate unique chatId
-    const chatId = sender < receiver
-      ? `${sender}_${receiver}`
-      : `${receiver}_${sender}`;
 
     // Reference to the messages collection
     const messagesRef = collection(db, `chats/${chatId}/messages`);
@@ -62,18 +58,34 @@ export const getMessages = async (SenderId, RecieverId, callback) => {
   }
 }
 
+  export const latestMsgSend = async(recieverId, senderId)=> {
+    console.log(recieverId)
+    console.log(senderId)
+    try {
+      console.log('working')
+      const friendsRef = collection(db, 'Users', recieverId, 'Friends');      
+      const q = query(friendsRef, where('userName',  '==', senderId))
+      const snapshot = await getDocs(q);
+      
+        snapshot.forEach(async(docSnap)=> {
+          const messageRef = doc(db, 'Users', recieverId, 'Friends', docSnap.id);
+          await updateDoc(messageRef, { lastMessageSeen: false, lastMessageGet: serverTimestamp() });
+        })
+      
+      console.log('work')
+    } catch (error) {
+      throw error
+    }
 
+  }
 
 export const deletMsg = async (SenderId,RecieverId,id) => {
   try {
 
-    const sender = SenderId.toLowerCase();
-    const receiver = RecieverId.toLowerCase();
+    const chatId = SenderId.uid < RecieverId.userUid
+    ? `${SenderId.uid}_${RecieverId.userUid}`
+    : `${RecieverId.userUid}_${SenderId.uid}`;
 
-    // Generate unique chatId
-    const chatId = sender < receiver
-      ? `${sender}_${receiver}`
-      : `${receiver}_${sender}`;
 
     const delRef = doc(db, `chats/${chatId}/messages`, id)
     const res = await deleteDoc(delRef)
@@ -82,4 +94,49 @@ export const deletMsg = async (SenderId,RecieverId,id) => {
     console.log(error)
     throw error
   }
+}
+
+export const isNewChat = async(recieverId, senderId)=> {
+  console.log(recieverId)
+  console.log(senderId)
+
+  try {
+    const friendsRef = collection(db, 'Users', senderId, 'Friends');      
+    const q = query(friendsRef, where('userName',  '==', recieverId.userName))
+    const snapshot = await getDocs(q);
+    
+      snapshot.forEach(async(docSnap)=> {
+        const messageRef = doc(db, 'Users', senderId, 'Friends', docSnap.id);
+        await updateDoc(messageRef, { lastMessageSeen: true, });
+      })
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const markMessageAsSeen = async(SenderId, RecieverId, currUser)=> {
+  try {
+
+    console.log('seen chala')
+    
+    const chatId = SenderId.uid < RecieverId.userUid
+    ? `${SenderId.uid}_${RecieverId.userUid}`
+    : `${RecieverId.userUid}_${SenderId.uid}`;
+
+
+        const messagesRef = collection(db, `chats/${chatId}/messages`);
+      console.log(currUser, RecieverId.userName, SenderId.displayName)
+        const q = query(messagesRef, where('RecieverId',  '==', currUser), where('seen', "==", false))
+
+        onSnapshot(q, (snapshot)=> {
+          snapshot.docs.forEach(async(docSnap)=> {
+            const messageRef = doc(db, `chats/${chatId}/messages`, docSnap.id);
+            await updateDoc(messageRef, { seen: true });
+          })
+        })
+  } catch (error) {
+    throw error
+  }
+  
 }

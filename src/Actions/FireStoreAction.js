@@ -17,3 +17,10 @@ export const isUserFriend = (value)=> {
         payload: value
     }
 }
+
+export const themeAction = (value)=> {
+    return {
+        type: 'THEME',
+        payload: value
+    }
+}

@@ -25,12 +25,12 @@ p{
 
 }
 .mainArea{
-    height: 550px;
+    height: 89%;
     width: 100%;
 
 }
 .textshowArea{
-    height: 480px;
+    height: 89%;
     overflow: scroll;
     overflow-x: hidden;
 
@@ -57,7 +57,7 @@ p{
     align-self: start;
 }
 .textshowArea ul li {
-    background-color: #4343b6;
+    background-color: #000062;
     color: #fff;
     /* font-size: 20px; */
     padding: 3px 8px;
@@ -67,12 +67,20 @@ p{
     display: flex;
     gap: 15px;
     position: relative;
+    cursor: pointer;
     
 }
+.none {
+    display: none;
+}
+
 .timeStamp{
     align-self: end;
     font-size: 11px;
-    color: rgb(228, 228, 228);
+    color: rgb(168 168 168);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 .textArea{
     height: 70px;

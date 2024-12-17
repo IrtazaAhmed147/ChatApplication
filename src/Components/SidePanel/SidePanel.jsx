@@ -4,8 +4,15 @@ import { IoMdSettings } from 'react-icons/io'
 import { IoPeople } from 'react-icons/io5'
 import './panel.css'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const SidePanel = () => {
+
+  const dataTheme = useSelector((state)=> state.fireStore)
+ 
+
+  const {theme} = dataTheme
+
 
   const style = {
     height: '100%',
@@ -17,7 +24,7 @@ const SidePanel = () => {
 
   return (
     <>
-    <div className='sidePanel'>
+    <div className='sidePanel' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
             <ul >
                 <li><Link style={style}  to='/chats'><IoPeople /></Link></li>
                 <li><Link style={style} to='/settings'><IoMdSettings /></Link></li>

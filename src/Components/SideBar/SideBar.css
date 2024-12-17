@@ -6,6 +6,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     gap: 10px;
     width: 100%;
+    background-color: #fff;
 }
 .searchBox input{
     border: none;
@@ -46,7 +47,7 @@ p{
 .searchScrollParentContainer{
   display: flex;
       flex-direction: column;
-      height: 90%;
+      height: 86%;
 }
 
 /* scroll bar */

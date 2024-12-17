@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFriendList } from '../../Firebase/FirestoreFunctions';
 import { isUserFriend } from '../../Actions/FireStoreAction';
 import { useNavigate } from 'react-router-dom';
+import { IoChatbox } from "react-icons/io5";
+
 import Loader from '../Loader'
 
 const FriendsList = (props) => {
@@ -26,15 +28,25 @@ const FriendsList = (props) => {
             try {
                 // setError(true)
                 if (data.userDetails) {
+                    // console.log(data.userDetails)
                     const res = data.userDetails?.filter((docs) => {
                         return docs.userName === data.isUser.displayName;
                     });
-
+                    console.log(res)
                     if (res.length > 0) {
                         const friendListSnapshot = await getFriendList(res[0].id);
                         const friendData = friendListSnapshot.docs.map((d) => d.data());
-                        setUser(friendData); // Correctly updates the user state.
-                        dispatch(isUserFriend(friendData))
+                        console.log(friendData)
+                        const sortedFriends = friendData.sort((a, b)=> {
+                            const aTime = a.lastMessageGet?.seconds || 0;
+                            const bTime = b.lastMessageGet?.seconds || 0;
+                            return bTime - aTime;
+
+                        })
+                        console.log(sortedFriends)
+                        setUser(sortedFriends); // Correctly updates the user state.
+                        dispatch(isUserFriend(sortedFriends))
+                 
                     }
                 }
             } catch (error) {
@@ -81,7 +93,7 @@ const FriendsList = (props) => {
                     <ul style={{ listStyle: 'none', padding: '0px', justifyContent: error ? 'center' : 'start', marginBottom: "0px" }}>
                         {error && <Loader />}
                         {!error && user?.map((value) => {
-                            return <li key={value.userName || value.id} onClick={() => handleChat(value.userUid)} className='userBox'>
+                            return <li style={{backgroundColor: '#1b1b1b'}} key={value.userName || value.id} onClick={() => handleChat(value.userUid)} className='userBox'>
                                 <span>
 
                                     <p style={{
@@ -91,6 +103,7 @@ const FriendsList = (props) => {
                                     }}>{value.name}</p>
                                     <p className='username'>{value.userName}</p>
                                 </span>
+                                    {value.lastMessageSeen === false && <p style={{color: '#2d2d8a',alignSelf: 'center', fontSize: '20px', fontWeight: '600'}}>New Chat <IoChatbox /></p>}
                             </li>
                         })}
 

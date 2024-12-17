@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { FaCheck } from 'react-icons/fa'
 import Loader from '../Loader'
 import { Button } from 'react-bootstrap'
-const AddPeoplePanel = () => {
+const AddPeoplePanel = (props) => {
 
   const [users, setUsers] = useState([])
   const [isFriend, setIsFriend] = useState(false)
@@ -105,7 +105,7 @@ const AddPeoplePanel = () => {
 
   return (
     <div className='InformationPanelBoxes'>
-      <h1>Add Friends</h1>
+      <h1 style={{color: props.theme === 'light' ? 'black' : 'var(--dark-text-color)'}}>Add Friends</h1>
       <div className='addfriendBox'>
         <div className='searchForm'>
 

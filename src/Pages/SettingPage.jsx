@@ -11,6 +11,10 @@ import { useSelector } from 'react-redux'
 const SettingPage = () => {
   
   const data = useSelector((state) => state.auth);
+   const dataTheme = useSelector((state)=> state.fireStore)
+   
+  
+    const {theme} = dataTheme
 
   const navigate = useNavigate()
 
@@ -31,13 +35,15 @@ const SettingPage = () => {
   }
 
 
+
+
   return (
     <>
     <SidePanel />
-    <div className='settingPage'>
-      <h1>Settings</h1>
+    <div className='settingPage' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
+      <h1 style={{color: theme === 'light' ? 'black' : 'var(--dark-text-color)'}}>Settings</h1>
       <ul>
-        <li className='userBox'><p>Theme</p> <span><Switch /></span></li>
+        <li className='userBox'><p>Theme</p> <span ><Switch userName={data.isUser.displayName} /></span></li>
         {/* <li className='userBox'><p>Notifications</p> <span><Switch /></span></li> */}
         <li ><Button className='btn mt-3' variant='danger' onClick={handleLogOut}>Log Out</Button></li>
         

@@ -11,8 +11,14 @@ import ChatlistPage from './Pages/ChatlistPage';
 import ChatwindowPage from './Pages/ChatwindowPage';
 import FindPeoplePage from './Pages/FindPeoplePage';
 import SettingPage from './Pages/SettingPage';
+import { useSelector } from 'react-redux';
 
 function App() {
+
+  const data = useSelector((state)=> state.fireStore)
+ 
+
+  const {theme} = data
 
   return (
     <>
@@ -24,9 +30,9 @@ function App() {
         </div>
 
         <div className='main'>
-          <div className='box'>
+          <div className='box' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)'}}>
             <Navbar />
-            <div className='contentBox'>
+            <div className='contentBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)'}}>
 
               <Routes>
                 <Route path='/' element={<Home />} />

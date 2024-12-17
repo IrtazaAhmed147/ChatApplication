@@ -48,8 +48,8 @@ const Signup = () => {
 
     e.preventDefault()
     setIsLoading(true);
-    setIsAuthError(false)
-    setIsError(false)
+    setIsAuthError(false);
+    setIsError(false);
     setError("");
     if (isTaken) {
       return
@@ -78,12 +78,13 @@ const Signup = () => {
         await demoFunc(email, userName, name, signUpUser.uid)
       }
       dispatch(signUpAction(signUpUser))
+      window.location.reload();
     } catch (error) {
       setIsAuthError(true)
       setError(error.message)
     } finally {
 
-
+      
       setIsLoading(false)
     }
 
