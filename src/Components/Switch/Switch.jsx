@@ -6,16 +6,15 @@ import { themeAction } from '../../Actions/FireStoreAction'
 const Switch = (props) => {
 
     const data = useSelector((state)=> state.fireStore)
-    console.log(data)
+
     const dispatch = useDispatch()
 
 
     const handleTheme = async()=> {
-        console.log(props.userName)
         try {
             if(props?.userName && dispatch) {
               const theme =  await updateTheme(props.userName)            
-              console.log(theme[0])
+             
               dispatch(themeAction(theme[0].theme))
              
 
@@ -23,14 +22,9 @@ const Switch = (props) => {
         } catch (error) {
             throw error
         }
-        console.log('theme')
       }
 
-    //   const handleThemeChange = () => {
-    //     // Toggle the theme
-       
-    //   };
-
+    
     return (
         <>
         <div className="toggle-switch">

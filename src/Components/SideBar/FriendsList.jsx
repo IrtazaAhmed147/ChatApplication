@@ -15,10 +15,11 @@ const FriendsList = (props) => {
     const fireStore = useSelector((state) => state.fireStore);
     const [user, setUser] = useState([])
     const [error, setError] = useState(false)
+    const [isAval, setIsAval] = useState(true)
 
     const dispatch = useDispatch()
 
-    
+
 
     useEffect(() => {
 
@@ -34,21 +35,21 @@ const FriendsList = (props) => {
                     const res = data.userDetails?.filter((docs) => {
                         return docs.userName === data.isUser.displayName;
                     });
-                   
+
                     if (res.length > 0) {
                         const friendListSnapshot = await getFriendList(res[0].id);
                         const friendData = friendListSnapshot.docs.map((d) => d.data());
-                      
-                        const sortedFriends = friendData.sort((a, b)=> {
+
+                        const sortedFriends = friendData.sort((a, b) => {
                             const aTime = a.lastMessageGet?.seconds || 0;
                             const bTime = b.lastMessageGet?.seconds || 0;
                             return bTime - aTime;
 
                         })
-                      
+
                         setUser(sortedFriends); // Correctly updates the user state.
                         dispatch(isUserFriend(sortedFriends))
-                 
+
                     }
                 }
             } catch (error) {
@@ -64,43 +65,44 @@ const FriendsList = (props) => {
     }, [data.isUser?.displayName, data.userDetails, dispatch, props.onlineStatus])
 
 
-     useEffect(() => {
+    useEffect(() => {
+        console.log('asdgasg')
         const addTalkOrbit = async () => {
 
-            
 
 
-          try {
-            const isAvailable = fireStore?.friends?.filter((value)=> {
-                return value.userName === 'TalkOrbit'
-            })
-            
-            const fetchedUsers = data?.userDetails || [];
-            const talkOrbitUser = fetchedUsers.find((user) => user.userName === 'TalkOrbit');
-            const onlineUser = fetchedUsers.find((user) => user.userName === data.isUser.displayName);
-        
+            try {
+                const res = data.userDetails?.filter((docs) => {
+                    return docs.userName === data.isUser.displayName;
+                });
 
-            if(isAvailable.length > 0 ){
-
-                return;
-            }
-        
-
-            if (talkOrbitUser && isAvailable.length === 0 && onlineUser.userName !== 'TalkOrbit') {
-            
-              await addFriend(onlineUser.id, talkOrbitUser); // user add talkorbit
-     
-              await addFriend(talkOrbitUser.id, onlineUser); //talk orbit add user
-          
-            }
-          } catch (error) {
-          
-            console.log(error.message)
+                if (res.length > 0) {
+                    const friendListSnapshot = await getFriendList(res[0].id);
+                    const friendData = friendListSnapshot.docs.map((d) => d.data());
     
-          }
+                    // Check if TalkOrbit is already in the friend's list
+                    const isTalkOrbitExist = friendData.some((friend) => friend.userName === 'TalkOrbit');
+    
+                    if (!isTalkOrbitExist) {
+                        const fetchedUsers = data?.userDetails || [];
+                        const talkOrbitUser = fetchedUsers.find((user) => user.userName === 'TalkOrbit');
+                        const onlineUser = fetchedUsers.find((user) => user.userName === data.isUser.displayName);
+    
+                        if (talkOrbitUser && onlineUser.userName !== 'TalkOrbit') {
+                            // Add TalkOrbit only if it doesn't exist already
+                            await addFriend(onlineUser.id, talkOrbitUser); // user add talkorbit
+                            await addFriend(talkOrbitUser.id, onlineUser); //talk orbit add user
+                        }
+                    }
+                }
+            } catch (error) {
+
+                console.log(error.message)
+
+            }
         }
         addTalkOrbit()
-      }, [data.isUser.displayName, data?.userDetails, fireStore.friends])
+    }, [data.isUser.displayName, data?.userDetails])
 
 
 
@@ -113,7 +115,7 @@ const FriendsList = (props) => {
         <>
             <div className='searchScrollParentContainer'>
 
-                <div className='searchBox' style={{ width: '50%', marginLeft: '3%', marginBottom: '30px' , backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c' }}>
+                <div className='searchBox' style={{ width: '50%', marginLeft: '3%', marginBottom: '30px', backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c' }}>
 
                     <IoIosSearch size={30} color='#0a00bc' />
                     <input style={{ backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c', color: props.theme === 'light' ? 'black' : '#fff' }} type="text" placeholder='Search' />
@@ -137,7 +139,7 @@ const FriendsList = (props) => {
                     <ul style={{ listStyle: 'none', padding: '0px', justifyContent: error ? 'center' : 'start', marginBottom: "0px" }}>
                         {error && <Loader />}
                         {!error && user?.map((value) => {
-                            return <li style={{backgroundColor: props.theme === 'light' ? '#fff' : '#1b1b1b'}} key={value.userName || value.id} onClick={() => handleChat(value.userUid)} className='userBox'>
+                            return <li style={{ backgroundColor: props.theme === 'light' ? '#fff' : '#1b1b1b' }} key={value.userName || value.id} onClick={() => handleChat(value.userUid)} className='userBox'>
                                 <span>
 
                                     <p style={{
@@ -148,7 +150,7 @@ const FriendsList = (props) => {
                                     }}>{value.name}</p>
                                     <p className='username'>{value.userName}</p>
                                 </span>
-                                    {value.lastMessageSeen === false && <p style={{color: 'rgb(101 101 219)',alignSelf: 'center', fontSize: '20px', fontWeight: '600'}}>New Chat <IoChatbox /></p>}
+                                {value.lastMessageSeen === false && <p style={{ color: 'rgb(101 101 219)', alignSelf: 'center', fontSize: '20px', fontWeight: '600' }}>New Chat <IoChatbox /></p>}
                             </li>
                         })}
 
