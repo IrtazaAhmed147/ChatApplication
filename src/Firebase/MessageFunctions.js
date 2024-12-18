@@ -59,10 +59,8 @@ export const getMessages = async (SenderId, RecieverId, callback) => {
 }
 
   export const latestMsgSend = async(recieverId, senderId)=> {
-    console.log(recieverId)
-    console.log(senderId)
+ 
     try {
-      console.log('working')
       const friendsRef = collection(db, 'Users', recieverId, 'Friends');      
       const q = query(friendsRef, where('userName',  '==', senderId))
       const snapshot = await getDocs(q);
@@ -72,7 +70,6 @@ export const getMessages = async (SenderId, RecieverId, callback) => {
           await updateDoc(messageRef, { lastMessageSeen: false, lastMessageGet: serverTimestamp() });
         })
       
-      console.log('work')
     } catch (error) {
       throw error
     }
@@ -97,8 +94,7 @@ export const deletMsg = async (SenderId,RecieverId,id) => {
 }
 
 export const isNewChat = async(recieverId, senderId)=> {
-  console.log(recieverId)
-  console.log(senderId)
+
 
   try {
     const friendsRef = collection(db, 'Users', senderId, 'Friends');      
@@ -118,7 +114,6 @@ export const isNewChat = async(recieverId, senderId)=> {
 export const markMessageAsSeen = async(SenderId, RecieverId, currUser)=> {
   try {
 
-    console.log('seen chala')
     
     const chatId = SenderId.uid < RecieverId.userUid
     ? `${SenderId.uid}_${RecieverId.userUid}`
@@ -126,7 +121,6 @@ export const markMessageAsSeen = async(SenderId, RecieverId, currUser)=> {
 
 
         const messagesRef = collection(db, `chats/${chatId}/messages`);
-      console.log(currUser, RecieverId.userName, SenderId.displayName)
         const q = query(messagesRef, where('RecieverId',  '==', currUser), where('seen', "==", false))
 
         onSnapshot(q, (snapshot)=> {

@@ -18,3 +18,8 @@
     margin: 0px 10px;
     height: 100%;
 }
+@media only screen and (max-width: 600px) {
+    .nav{
+        border-radius: 0px;
+    }
+  }

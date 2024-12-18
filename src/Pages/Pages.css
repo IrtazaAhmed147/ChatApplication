@@ -30,6 +30,7 @@
 }
 .settingPage ul{
     list-style: none;
+    padding: 0px;
 }
 .logOutBtn{
     background-color: red;

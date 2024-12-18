@@ -3,10 +3,13 @@ import { addFriend, getFriendRequests, rejectRequest } from '../../Firebase/Fire
 import { useDispatch, useSelector } from 'react-redux';
 import { requestList } from '../../Actions/FireStoreAction';
 import { Button } from 'react-bootstrap';
+import Loader from '../Loader';
 
-const NotificationPanel = () => {
+const NotificationPanel = (props) => {
 
   const data = useSelector((state) => state.auth);
+  // const [loader, setLoader] = useState(null)
+  const [loaderId, setLoaderId] = useState(null);
 
   const dispatch = useDispatch()
 
@@ -30,12 +33,12 @@ const NotificationPanel = () => {
         }
       }
     };
-
     fetchNotifications();
   }, [data?.isUser?.displayName, dispatch]); // Fetch notifications when the userUid changes
 
   const handleReject = async (id) => {
     try {
+      setLoaderId(id)
       await rejectRequest(id);
       // dispatch(filterRequestList(id))
 
@@ -47,6 +50,8 @@ const NotificationPanel = () => {
       // No need to manually update the notifications here; the real-time listener will handle it
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoaderId(null)
     }
   };
 
@@ -54,13 +59,14 @@ const NotificationPanel = () => {
 
     const fetchUsers = async (senderName ,id) => {
       try {
-
+        setLoaderId(id)
         const users = data.userDetails
         const ownerId = users.filter((value) => {
           return (value.userName === data.isUser.displayName) || (value.userName === senderName)
         })
 
         if(ownerId.length === 2) {
+          setLoaderId(id)
 
           await addFriend(ownerId[1].id, ownerId[0])
           await addFriend(ownerId[0].id, ownerId[1])
@@ -72,11 +78,11 @@ const NotificationPanel = () => {
             prevNotifications.filter((notification) => notification.id !== id)
         );
        
-      } else {
-        console.log(ownerId)
-      }
+      } 
       } catch (error) {
         console.log(error)
+      } finally{
+        setLoaderId(null)
       }
     }
     fetchUsers(senderName, id)
@@ -93,21 +99,25 @@ const NotificationPanel = () => {
         overflowX: 'hidden',
         paddingBottom: '5px',
         height: '100%',
+        overflowY: 'auto',
 
       }}>
 
         <div>
           <ul style={{ listStyle: 'none', padding: '0px' }}>
             {notifications.map((value) => {
-              return <li className='userBox' key={value.id}> 
+             
+
+              return <li className='userBox' key={value.id} style={{alignItems: 'center', backgroundColor: props.theme === 'light' ? '#fff' : '#1b1b1b'}}> 
               <div>
 
-              <h3 style={{margin: '0px'}}>{value.SenderId}</h3> <p>has sent you a friend request</p> 
+              <h3 style={{margin: '0px', color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'}}>{value.SenderId}</h3> <p style={{color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'}}>has sent you a friend request</p> 
               </div>
               <div>
-
-              <Button variant='success' className='btn  me-3' onClick={() => acceptFriendRequest(value.SenderId, value.id)}>Add</Button> 
-              <Button variant='danger' className='btn' onClick={() => handleReject(value.id)}>Reject</Button>
+              {loaderId === value.id && <Loader />}
+              {/* {<Loader />} */}
+             {loaderId !== value.id  && <> <Button variant='success' className='btn  me-3' onClick={() => acceptFriendRequest(value.SenderId, value.id)}>Add</Button> 
+              <Button variant='danger' className='btn' onClick={() => handleReject(value.id)}>Reject</Button> </>}
               </div>
               </li>
             })}

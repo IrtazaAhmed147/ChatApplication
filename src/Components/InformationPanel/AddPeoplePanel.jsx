@@ -25,7 +25,7 @@ const AddPeoplePanel = (props) => {
     const fetchSendedRequest = async () => {
       try {
         const SendedRequestsArr = await getSendedRequest(data.isUser.displayName)
-        console.log(data.isUser.displayName)
+      
         const res = SendedRequestsArr
         setPendingUsers(res)
       } catch (error) {
@@ -105,17 +105,17 @@ const AddPeoplePanel = (props) => {
 
   return (
     <div className='InformationPanelBoxes'>
-      <h1 style={{color: props.theme === 'light' ? 'black' : 'var(--dark-text-color)'}}>Add Friends</h1>
+      <h1 style={{color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'}}>Add Friends</h1>
       <div className='addfriendBox'>
         <div className='searchForm'>
 
 
-          <div className='searchBox' style={{ marginBottom: isUserFound ? '20px' : '0px' }} >
+          <div className='searchBox' style={{ marginBottom: isUserFound ? '20px' : '0px', backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c' }} >
             <IoIosSearch size={30} color='#0a00bc' />
 
-            <input onChange={(e) => tempTextRef.current = e.target.value} placeholder='Search' type="search" />
+            <input style={{ backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c', color: props.theme === 'light' ? 'black' : '#fff' }} onChange={(e) => tempTextRef.current = e.target.value} placeholder='Search' type="search" />
           </div>
-          <Button variant='success' className='btn' onClick={handleSearchFriend}>Search</Button>
+          <Button style={{ marginBottom: isUserFound ? '20px' : '0px' }} variant='success' className='btn' onClick={handleSearchFriend}>Search</Button>
         </div>
 
 
@@ -131,17 +131,18 @@ const AddPeoplePanel = (props) => {
 
 
           <ul style={{ listStyle: 'none', padding: '0px', justifyContent: error ? 'center' : 'start' }}>
-            {isUserFound && <p style={{ fontSize: '20px' }}>User not Found</p>}
+            {isUserFound && <p style={{ fontSize: '20px', color: fireStoreData.theme === 'light' ? 'black' : '#fff' }}>User not Found</p>}
             {error && <Loader />}
             {!error && users?.map((user) => {
-              return <li key={user.userUid} className='userBox' style={{ flexDirection: 'row' }}>
+              return <li key={user.userUid} className='userBox' style={{ flexDirection: 'row', backgroundColor: props.theme === 'light' ? '#fff' : '#1b1b1b' }}>
 
 
                 <span>
 
                   <p style={{
                     fontWeight: '600',
-                    fontSize: '21px'
+                    fontSize: '21px',
+                     color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'
                   }}>{user.name}</p>
                   <p className='username'>{user.userName}</p>
                 </span>
@@ -158,8 +159,12 @@ const AddPeoplePanel = (props) => {
                   </svg>
                   <span>Add</span>
                 </button>}
-                {isPending && <p>Request Sended</p>}
-                {isFriend && <p className='icon'><FaCheck /></p>}
+                {isPending && <p style={{
+                   color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'
+                }}>Request Sended</p>}
+                {isFriend && <p className='icon' style={{
+                   color: props.theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'
+                }}><FaCheck /></p>}
 
               </li>
             })}

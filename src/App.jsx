@@ -15,24 +15,24 @@ import { useSelector } from 'react-redux';
 
 function App() {
 
-  const data = useSelector((state)=> state.fireStore)
- 
+  const data = useSelector((state) => state.fireStore)
 
-  const {theme} = data
+
+  const { theme } = data
 
   return (
     <>
       <Router>
 
-        <div className=' sideDesign'>
+        <div className=' sideDesign' style={{ backgroundColor: theme === 'light' ? '#fff' : '#000000' }}>
           <img className='upperimage' src={sideDesignPic} alt="" />
           <img className='bottomimage' src={sideDesignPic} alt="" />
         </div>
 
         <div className='main'>
-          <div className='box' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)'}}>
+          <div className='box' style={{ backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)' }}>
             <Navbar />
-            <div className='contentBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)'}}>
+            <div className='contentBox' style={{ backgroundColor: theme === 'light' ? '#fff' : 'var(--back-dark-color)' }}>
 
               <Routes>
                 <Route path='/' element={<Home />} />

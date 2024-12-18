@@ -16,6 +16,7 @@ const Signup = () => {
   const [isAuthError, setIsAuthError] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const [isTaken, setIsTaken] = useState(false)
+  const [noSpaceError, setNoSpaceError] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -65,7 +66,12 @@ const Signup = () => {
       setIsLoading(false)
       setIsUserNameError(false)
       return;
+    }else if(noSpaceError) {
+      setIsLoading(false)
+      return;
     }
+    const filteredName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  
 
     setIsError(false)
 
@@ -74,8 +80,9 @@ const Signup = () => {
 
       const signUpUser = await createUser(email, password, userName)
       if (signUpUser && signUpUser.uid) {
-
-        await demoFunc(email, userName, name, signUpUser.uid)
+        await demoFunc(email, userName, filteredName, signUpUser.uid);
+  
+       
       }
       dispatch(signUpAction(signUpUser))
       window.location.reload();
@@ -93,7 +100,19 @@ const Signup = () => {
 
   const handleUserNameFunc = (e) => {
     const currentUserName = e.target.value;
+
+
+    const regex = /^[A-Za-z0-9_]+$/;
+
+  if (!regex.test(currentUserName)) {
+    setNoSpaceError(true);
+    setIsTaken(false);
+    return;
+  }
+
     setUserName(currentUserName);
+    setNoSpaceError(false);
+
     const fetchUsers = async () => {
       const fetchedUsers = await getUserName();
 
@@ -132,6 +151,7 @@ const Signup = () => {
               <input onChange={handleUserNameFunc} className='input' type="text" placeholder='Username' required />
               {isUserNameError && <p>Username is required</p>}
               {isTaken && <p>Username is already taken</p>}
+              {noSpaceError && <p>Only letters,numbers,underscore are allowed</p>}
 
 
             </div>

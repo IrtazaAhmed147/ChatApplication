@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import './Switch.css'
 import { updateTheme } from '../../Firebase/FirestoreFunctions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,10 +33,13 @@ const Switch = (props) => {
 
     return (
         <>
-            <label className="switch">
-                <input type="checkbox" onChange={handleTheme}  checked={data.theme === 'dark' }/>
+        <div className="toggle-switch">
+            <label className="switch-label">
+               
+                <input type="checkbox" onChange={handleTheme} checked={data.theme === 'light' } className="checkbox" />
                 <span className="slider"></span>
             </label>
+            </div>
         </>
     )
 }

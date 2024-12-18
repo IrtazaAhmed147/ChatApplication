@@ -61,11 +61,11 @@ const ChatlistPage = () => {
           height: '10%'
         }}>
 
-          <h1 style={{ margin: '10px 0px 0px 3%', color: theme === 'light' ? 'black' : 'var(--dark-text-color)' }}>Chats</h1>
+          <h1 style={{ margin: '10px 0px 0px 3%', color: theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)' }}>Chats</h1>
 
 
         </div>
-        <FriendsList onlineStatus={onlineStatus}/>
+        <FriendsList theme={theme} onlineStatus={onlineStatus}/>
       </div>
     </>
   )

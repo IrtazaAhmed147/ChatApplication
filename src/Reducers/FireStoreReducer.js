@@ -6,7 +6,6 @@ const initialState = {
 
 export const fireStoreFunc = (state = initialState, action) => {
     
-    console.log(action.payload)
     switch (action.type) {
         case 'REQUESTLIST': return {
             ...state, 

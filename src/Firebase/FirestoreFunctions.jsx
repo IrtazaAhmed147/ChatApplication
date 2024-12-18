@@ -51,26 +51,27 @@ export const getUserName = async (dispatch) => {
 }
 
 export const updateTheme = async (userName)=> {
-  console.log(userName)
+ 
   try {
       const ref = collection(db, 'Users')
-      console.log('chala')
+      
       const q = query(ref, where('userName',  '==', userName))
-      console.log(q)
-      const theme = []
+     
       const snapshot = await getDocs(q);
-            snapshot.forEach(async(docSnap)=> {
+    const themeUpdates = snapshot.docs.map(async (docSnap) => {
+      const userData = docSnap.data();
+      const themeRef = doc(db, 'Users', docSnap.id);
+      
 
+      const newTheme = userData.theme === 'light' ? 'dark' : 'light';
+      await updateDoc(themeRef, { theme: newTheme });
 
-              const userData = docSnap.data();
-              const themeRef = doc(db, 'Users', docSnap.id);
-              const newTheme = userData.theme === 'light' ? 'dark' : 'light';
-                theme.push({
-                  theme: userData.theme
-                })
-              await updateDoc(themeRef, { theme: newTheme});
-            })
-            return theme
+      return { theme: newTheme }; // Return updated theme
+    });
+
+    const themes = await Promise.all(themeUpdates); // Wait for all updates
+   
+    return themes;
             
   } catch (error) {
     throw error
@@ -82,9 +83,9 @@ export const getTheme = async(userName)=> {
 
 try {
   const ref = collection(db, 'Users')
-      console.log('chala')
+      
       const q = query(ref, where('userName',  '==', userName))
-      console.log(q)
+    
       // const theme = []
       const snapshot = await getDocs(q);
              // Use Promise.all to resolve asynchronous logic properly
@@ -97,7 +98,6 @@ try {
 
     return theme;
 } catch (error) {
-  console.log(error)
   throw error
 }
 } 
@@ -113,7 +113,6 @@ export const sendRequest = async (SenderId, RecieverId) => {
       time: serverTimestamp(),
     });
   } catch (e) {
-    console.error("Error adding document: ", e);
     throw e
   }
 }
@@ -139,7 +138,6 @@ export const getFriendRequests = async (userId) => {
 
     return invitations;
   } catch (error) {
-    console.log(error.message);
     throw error;
   }
 };
@@ -162,7 +160,6 @@ export const getSendedRequest = async (userId) => {
 
     return invitations;
   } catch (error) {
-    console.log(error.message);
     throw error;
   }
 };
@@ -175,7 +172,6 @@ export const rejectRequest = async (id) => {
     const res = await deleteDoc(delRef)
     return res
   } catch (error) {
-    console.log(error)
     throw error
   }
 }

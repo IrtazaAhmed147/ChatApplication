@@ -8,7 +8,7 @@ import { TiTick } from 'react-icons/ti'
 // import { getTokenFromDb } from '../../Firebase/CloudMessaging'
 const MainChatArea = (props) => {
 
-  const [userInput, setUserInput] = useState('')
+  // const [userInput, setUserInput] = useState('')
   const tempTextRef = useRef("")
   const [messages, setMessages] = useState([]);
   const [isHolding, setIsHolding] = useState(false)
@@ -20,6 +20,8 @@ const MainChatArea = (props) => {
   const startPressRef = useRef(null); // Ref for tracking press start time
   const holdTimeoutRef = useRef(null);
   const currMsgId = useRef(null);
+
+
   useEffect(() => {
 
     if (!props.onlineStatus) {
@@ -40,15 +42,14 @@ const MainChatArea = (props) => {
 
       markMessageAsSeen(props.sender, props.reciever[0], data.isUser.displayName)
       if (data.userDetails) {
-        // console.log(data.userDetails)
         const res = data.userDetails?.filter((docs) => {
-            return docs.userName === data.isUser.displayName;
+          return docs.userName === data.isUser.displayName;
         })
-        if(res.length > 0) {
+        if (res.length > 0) {
 
           isNewChat(props.reciever[0], res[0].id)
         }
-        
+
       }
       return () => {
         if (typeof unsubscribe === 'function') {
@@ -60,23 +61,26 @@ const MainChatArea = (props) => {
 
 
 
-  }, [props.sender.displayName, props.reciever, props.onlineStatus, props.sender])
+  }, [props.sender.displayName, props.reciever, props.onlineStatus, props.sender, data.isUser.displayName, data.userDetails])
+
+  const isMobileDevice = () => {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  };
 
 
   useEffect(() => {
-   
+
     const clickOutside = (event) => {
       // Check if the click is outside the specific message list or ListGroup
       const isClickInside = event.target.closest('.message-item') || event.target.closest('.ListGroup');
       if (!isClickInside) {
-        console.log('Outside click detected');
         if (isHolding) {
           setIsHolding(false);
           currMsgId.current = '';
         }
       }
     };
-  
+
     document.addEventListener('mousedown', clickOutside);
     return () => {
       document.removeEventListener('mousedown', clickOutside);
@@ -87,39 +91,33 @@ const MainChatArea = (props) => {
 
   const handleSend = () => {
     const text = tempTextRef.current
-    // setUserInput(text)
 
 
     const handleSendMsg = async () => {
       try {
         if (text && props.reciever[0].userName && props.sender.displayName) {
-          // await getTokenFromDb(props.reciever[0].userName, text)
-          console.log(props.reciever[0], props.sender)
+     
           await sendMessage(props.sender, props.reciever[0], text)
           if (data.userDetails) {
-            console.log(data.userDetails)
-                              const reciever = data.userDetails?.filter((docs) => {
-                                  return docs.userName === props.reciever[0].userName;
-                              });
-                              const sender = data.userDetails?.filter((docs) => {
-                                  return docs.userName === data.isUser.displayName;
-                              });
-                              console.log(reciever, sender)
-                              if (reciever.length > 0 && sender.length > 0) {
-                                console.log('workingin')
-                                  await latestMsgSend(reciever[0].id, sender[0].userName);
-                                    console.log('workin')
-                              }
-                          }
-          console.log('msg sended')
+            const reciever = data.userDetails?.filter((docs) => {
+              return docs.userName === props.reciever[0].userName;
+            });
+            const sender = data.userDetails?.filter((docs) => {
+              return docs.userName === data.isUser.displayName;
+            });
+            if (reciever.length > 0 && sender.length > 0) {
+              
+              await latestMsgSend(reciever[0].id, sender[0].userName);
+          
+            }
+          }
 
         }
-        console.log('send')
       } catch (error) {
         console.log(error)
       } finally {
         tempTextRef.current = ""; // Clear the ref value
-        setUserInput(""); // Clear the state (optional for future reference)
+        // Clear the state (optional for future reference)
         document.getElementById("messageInput").value = "";
       }
 
@@ -153,49 +151,57 @@ const MainChatArea = (props) => {
 
   }
 
+
   function mouseDown(id) {
-    console.log('Mouse down started');
     startPressRef.current = Date.now(); // Record the time when the press starts
     // setCurrMsgId(id);
     currMsgId.current = id
-    console.log(currMsgId)
+   
 
 
     // Start the timeout for holding action
     holdTimeoutRef.current = setTimeout(() => {
-      console.log('Hold triggered');
+     
       setIsHolding(true); // Set holding state after the delay
     }, delay);
   }
   function mouseUp(id) {
     if (holdTimeoutRef.current) {
-      
+
       clearTimeout(holdTimeoutRef.current);
       holdTimeoutRef.current = null;
     }
-    console.log(currMsgId)
-    console.log(id)
+  
     // Check if the press duration was less than the delay
     const elapsedTime = Date.now() - (startPressRef.current || 0);
-    console.log('Elapsed Time:', elapsedTime, 'Delay:', delay);
+    
 
     if (elapsedTime < delay) {
-      console.log('Short click detected, not a hold');
       setIsHolding(false); // Reset the holding state
       currMsgId.current = ''; // Reset the current message ID 
     }
   }
-      console.log(isHolding)
   const handleDelMsg = async (id) => {
-    console.log('delete msg')
+
     try {
       await deletMsg(props.sender, props.reciever[0], id)
 
     } catch (error) {
       console.log(error)
     }
-    console.log(id)
+  
   }
+
+  const handleCopyMsg = async (textToCopy) => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setIsHolding(false)
+ 
+
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  };
 
 
   if (!props.reciever?.[0]?.userName) return <h1>Loading</h1>
@@ -206,19 +212,34 @@ const MainChatArea = (props) => {
 
     <div className='mainArea'>
       <div className='textshowArea scrollable-container'>
-        <ul>
+        <ul className='scrollable-container'>
           {!props.onlineStatus && <div className='ms-4' style={{ color: "red" }}>No Internet Connection</div>}
           {messages.map((msg) => (
 
-            <li onMouseDown={() => mouseDown(msg.SenderId === data.isUser.displayName ? msg.id : '')} onMouseUp={() => mouseUp(msg.SenderId === data.isUser.displayName ? msg.id : '')} key={msg.id} style={{ display: msg.time ? '' : 'none' }} className={props.sender.displayName === msg.SenderId ? 'sender' : 'reciever'}>
+            <li onMouseDown={() => !isMobileDevice() && mouseDown(msg.id)}
+              onMouseUp={() => !isMobileDevice() && mouseUp(msg.id)}
+              onTouchStart={() => isMobileDevice() && mouseDown(msg.id)}
+              onTouchEnd={() => isMobileDevice() && mouseUp(msg.id)}
+              key={msg.id} style={{ display: msg.time ? '' : 'none', backgroundColor: props.theme === 'light' ? 'rgb(64 64 172)' : 'rgb(27 27 27)', flexWrap: 'wrap' }} className={props.sender.displayName === msg.SenderId ? 'sender' : 'reciever'}>
 
-              
-              {currMsgId.current === msg.id && isHolding && <ListGroup onMouseDown={(e) => e.stopPropagation()}>
-                <ListGroup.Item onClick={(e) => { e.stopPropagation(); handleDelMsg(msg.id); }}>Delete <MdDelete /></ListGroup.Item>
-                <ListGroup.Item onClick={(e) => e.stopPropagation()}>Copy</ListGroup.Item>
-              </ListGroup>}
 
-              <p>{msg.message}</p> <p className='timeStamp'>{
+
+              {currMsgId.current === msg.id && isHolding && <ListGroup  onTouchStart={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
+                {msg.SenderId === data.isUser.displayName && (
+                  <ListGroup.Item onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelMsg(msg.id);
+                  }}>
+                    Delete <MdDelete />
+                  </ListGroup.Item>
+                )}
+                <ListGroup.Item onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyMsg(msg.message);
+                }}>Copy <MdDelete /></ListGroup.Item></ListGroup>}
+
+
+              <p style={{ userSelect: 'none' }}>{msg.message}</p> <p className='timeStamp'>{
                 msg.time ? convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds }).time + ` ${convertTime({ seconds: msg.time.seconds, nanoseconds: msg.time.nanoseconds }).date}` : " "
               } <TiTick style={{ fontSize: '20px' }} color={msg.seen === true ? '#00ff00' : '#fff'} /></p>
             </li>
@@ -226,10 +247,10 @@ const MainChatArea = (props) => {
 
         </ul>
       </div>
-      <div className='textArea'  style={{backgroundColor: props.theme === 'light' ? '#fff' : 'var(--back-dark-color)'}}>
-        <div className='textBox'>
+      <div className='textArea' style={{ backgroundColor: props.theme === 'light' ? '#fff' : 'var(--back-dark-color)' }}>
+        <div className='textBox' style={{ backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c' }}>
 
-          <input type="text" id="messageInput" onChange={(e) => tempTextRef.current = e.target.value} />
+          <input type="text" style={{ backgroundColor: props.theme === 'light' ? '#fff' : '#1c1c1c', color: props.theme === 'light' ? 'black' : '#fff' }} id="messageInput" onChange={(e) => tempTextRef.current = e.target.value} />
           <button disabled={!props.onlineStatus} onClick={handleSend}>send</button>
         </div>
       </div>

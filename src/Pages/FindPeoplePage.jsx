@@ -43,7 +43,7 @@ const FindPeoplePage = () => {
     <SidePanel />
     <div className='findPeoplePageBox' style={{backgroundColor: theme === 'light' ? '#fff' : 'var(--main-dark-color)'}}>
       <AddPeoplePanel theme={theme}/>
-      <NotificationPanel />
+      <NotificationPanel theme={theme}/>
     </div>
     </>
   )

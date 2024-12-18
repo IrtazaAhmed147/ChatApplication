@@ -6,33 +6,37 @@ import { useNavigate } from 'react-router-dom'
 import { getTheme, getUserName } from '../Firebase/FirestoreFunctions'
 import SidePanel from '../Components/SidePanel/SidePanel'
 import { themeAction } from '../Actions/FireStoreAction'
-// import { requestFunction } from '../Utility/NotificationPermission'
 const Home = () => {
 
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
+
 
   const data = useSelector((state) => state.auth);
-  const theme = useSelector((state) => state.fireStore);
-  console.log(theme)
+
+
 
   useEffect(() => {
-    checkUser(dispatch);  
+    checkUser(dispatch);
     getUserName(dispatch);
   }, [dispatch]);
 
-  useEffect(()=> {
-    if(data?.isUser) {
+  useEffect(() => {
+    if (data?.isUser) {
 
       const fetchTheme = async () => {
-        const themeData = await getTheme(data.isUser.displayName);
-       dispatch(themeAction(themeData[0].theme))
-        console.log(themeData); // [{ theme: 'light' }]
+        try {
+          const themeData = await getTheme(data.isUser.displayName);
+          dispatch(themeAction(themeData[0].theme))
+
+        } catch (error) {
+          console.log(error)
+        }
       };
-      
+
       fetchTheme();
+
     }
 
 
@@ -48,16 +52,16 @@ const Home = () => {
   useEffect(() => {
     if (!data.isUser) {
       navigate('/login')
-    
+
     }
-    
+
   }, [data, navigate])
 
   return (
     <>
-      
-      <SidePanel   />
-        
+
+      <SidePanel />
+
     </>
   )
 }

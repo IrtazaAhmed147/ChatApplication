@@ -20,6 +20,7 @@ const SidePanel = () => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    color: theme === 'light' ? 'var(--light-text-color)' : 'var(--dark-text-color)'
   }
 
   return (
