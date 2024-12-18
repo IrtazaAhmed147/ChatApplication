@@ -66,7 +66,6 @@ const FriendsList = (props) => {
 
 
     useEffect(() => {
-        console.log('asdgasg')
         const addTalkOrbit = async () => {
 
 

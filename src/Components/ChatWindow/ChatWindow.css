@@ -1,5 +1,5 @@
 .chatHeader {
-    height: 80px;
+    height: 15%;
     width: 100%;
     box-shadow: 0px 15px 17px -10px rgba(0, 0, 0, 0.19);
     padding: 10px;
@@ -28,7 +28,7 @@ p {
 }
 
 .mainArea {
-    height: 89%;
+    height: 85%;
     width: 100%;
     display: flex;
     flex-direction: column;

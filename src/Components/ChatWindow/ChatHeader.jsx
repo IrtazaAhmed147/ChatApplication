@@ -16,7 +16,7 @@ const ChatHeader = (props) => {
       <button className='backBtn' onClick={handleBack}><FaArrowLeftLong /></button>
       <div>
 
-      <h1 style={{color: props.theme === 'light' ? 'black' : 'var(--dark-text-color)'}}>{props.user.length === 0 ? '' : props.user[0].name}</h1>
+      <h1 style={{color: props.theme === 'light' ? 'black' : 'var(--dark-text-color)', margin: '0px', fontSize: '22px'}}>{props.user.length === 0 ? '' : props.user[0].name}</h1>
       <p className='username'>{props.lastSeen}</p>
       </div>
     </div>
